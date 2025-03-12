@@ -15,7 +15,7 @@ export default function Home() {
     const fetchConversations = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/chat/conversations"
+          "http://localhost:5001/api/chat/conversations"
         );
         if (response.ok) {
           const data = await response.json();
@@ -41,7 +41,7 @@ export default function Home() {
   const createNewConversation = async (title = "New Conversation") => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/chat/new", {
+      const response = await fetch("http://localhost:5001/api/chat/new", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

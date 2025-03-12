@@ -21,7 +21,7 @@ export default function Sidebar({
 
   const fetchSources = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/files/sources");
+      const response = await fetch("http://localhost:5001/api/files/sources");
       if (response.ok) {
         const data = await response.json();
         setSources(data);

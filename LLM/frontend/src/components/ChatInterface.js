@@ -27,7 +27,7 @@ export default function ChatInterface({ conversationId }) {
     try {
       setLoading(true);
       const response = await fetch(
-        `http://localhost:5000/api/chat/history/${conversationId}`
+        `http://localhost:5001/api/chat/history/${conversationId}`
       );
       if (response.ok) {
         const data = await response.json();
@@ -55,7 +55,7 @@ export default function ChatInterface({ conversationId }) {
 
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/api/chat/send", {
+      const response = await fetch("http://localhost:5001/api/chat/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

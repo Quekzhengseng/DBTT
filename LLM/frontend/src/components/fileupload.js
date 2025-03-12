@@ -65,7 +65,7 @@ export default function FileUpload({ onUploadSuccess }) {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("http://localhost:5000/api/files/upload", {
+        const response = await fetch("http://localhost:5001/api/files/upload", {
           method: "POST",
           body: formData,
         });
