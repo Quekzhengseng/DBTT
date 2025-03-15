@@ -7,6 +7,8 @@ export default function ChatInterface({ conversationId }) {
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [userDetails, setUserDetails] = useState({});
+  const [pendingComplaint, setPendingComplaint] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Fetch conversation history when conversationId changes
@@ -50,24 +52,65 @@ export default function ChatInterface({ conversationId }) {
       content: inputMessage,
       timestamp: new Date().toISOString(),
     };
+
     setMessages((prev) => [...prev, userMessage]);
     setInputMessage("");
 
     try {
       setLoading(true);
+      
+      // Include any collected user details if we're in the middle of processing a complaint
+      const requestBody = {
+        message: inputMessage,
+        conversation_id: conversationId,
+      };
+      
+      // If we have pending complaint data, include it
+      if (pendingComplaint) {
+        // Update user details with any new information from the input message
+        const updatedUserDetails = {
+          ...userDetails,
+          // If the message might contain details requested previously
+          user_message: inputMessage,
+        };
+        
+        requestBody.user_data = updatedUserDetails;
+        requestBody.intent = pendingComplaint.intent;
+        requestBody.urgency = pendingComplaint.urgency;
+      }
+
       const response = await fetch("http://localhost:5001/api/chat/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          message: inputMessage,
-          conversation_id: conversationId,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
         const data = await response.json();
+        
+        // Handle the case where the system is requesting more details for a complaint
+        if (data.requesting_details) {
+          // Save the complaint information so we can send it back with the user's response
+          setPendingComplaint({
+            intent: data.intent,
+            urgency: data.urgency,
+          });
+          
+          // Save any user details already collected
+          if (data.collected_data) {
+            setUserDetails(prevDetails => ({
+              ...prevDetails,
+              ...data.collected_data
+            }));
+          }
+        } else if (data.ticket_created) {
+          // If a ticket was created, clear the pending complaint state
+          setPendingComplaint(null);
+          setUserDetails({});
+        }
+        
         const assistantMessage = {
           role: "assistant",
           content: data.message,
@@ -137,7 +180,7 @@ export default function ChatInterface({ conversationId }) {
             type="text"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Ask something about travel..."
+            placeholder={pendingComplaint ? "Please provide the requested details..." : "Ask something about travel..."}
             className="message-input"
             disabled={loading}
           />

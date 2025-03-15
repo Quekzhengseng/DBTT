@@ -27,11 +27,16 @@ def send_message():
             print(f"Error getting relevant context: {e}")
             relevant_context = []
         
+        # Get user ID if available (use "anonymous" as default)
+        user_id = data.get("user_id", "anonymous")
+
         # Process with LLM
         response = current_app.services.llm_service.generate_response(
+            user_id=user_id,  # Pass user_id
             user_message=user_message,
             conversation_history=history,
-            context=relevant_context
+            context=relevant_context,
+            conversation_id=conversation_id
         )
         
         # Try to store the conversation, but continue if it fails
@@ -64,15 +69,30 @@ def get_conversation_history(conversation_id):
 
 @chat_bp.route('/conversations', methods=['GET'])
 def get_conversations():
-    """Get a list of all conversations."""
+    """Get a list of all conversations with their titles."""
     conversations = current_app.services.firebase_service.get_all_conversations()
-    return jsonify(conversations)
+
+    return jsonify([
+        {
+            "id": conv["id"],
+            "title": conv.get("title", f"Conversation {conv['id'][:5]}") if conv.get("title") else "New Conversation",
+            "updated_at": conv.get("updated_at")  # ✅ Removed message_count
+        }
+        for conv in conversations
+    ])
+
+
+
 
 @chat_bp.route('/new', methods=['POST'])
 def create_conversation():
-    """Create a new conversation."""
+    """Create a new conversation with a meaningful title."""
     data = request.json
-    title = data.get('title', 'New Conversation')
-    
+    user_message = data.get('message', '')
+
+    # Generate title based on the user's first input
+    title = current_app.services.llm_service.generate_conversation_title(user_message) if user_message else "New Conversation"
+
     conversation_id = current_app.services.firebase_service.create_conversation(title)
-    return jsonify({'conversation_id': conversation_id})
+    return jsonify({'conversation_id': conversation_id, 'title': title})
+

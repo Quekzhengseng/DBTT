@@ -1,23 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import FileUpload from "./FileUpload";
+import FileUpload from "./fileupload";
 
 export default function Sidebar({
-  conversations,
   currentConversation,
   onSelectConversation,
   onNewConversation,
   showUpload,
   toggleUpload,
+  conversationsUpdateTrigger  // ✅ Receive the prop
 }) {
-  const [sources, setSources] = useState([]);
+  const [conversations, setConversations] = useState([]);
+  
 
   useEffect(() => {
-    if (showUpload) {
-      fetchSources();
+    fetchConversations();
+  }, [conversationsUpdateTrigger]);
+
+  const fetchConversations = async () => {
+    try {
+      const response = await fetch("http://localhost:5001/api/chat/conversations");
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Fetched conversations:', data); // Debug log
+        setConversations(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch conversations:", error);
     }
-  }, [showUpload]);
+  };
+  
 
   const fetchSources = async () => {
     try {
@@ -44,10 +57,7 @@ export default function Sidebar({
       </div>
 
       <div className="action-buttons">
-        <button
-          onClick={() => onNewConversation("New Conversation")}
-          className="btn btn-primary"
-        >
+        <button onClick={() => onNewConversation("New Conversation")} className="btn btn-primary">
           New Conversation
         </button>
         <button onClick={toggleUpload} className="btn btn-secondary">
@@ -58,7 +68,6 @@ export default function Sidebar({
       {showUpload && (
         <div className="upload-section">
           <FileUpload onUploadSuccess={fetchSources} />
-
           <div className="sources-list">
             <h3 className="upload-heading">Knowledge Sources</h3>
             {sources.length === 0 ? (
@@ -68,9 +77,7 @@ export default function Sidebar({
                 {sources.map((source, index) => (
                   <li key={index} className="source-item">
                     <span className="source-name">{source.name}</span>
-                    <span className="source-chunks">
-                      {source.chunks} chunks
-                    </span>
+                    <span className="source-chunks">{source.chunks} chunks</span>
                   </li>
                 ))}
               </ul>
@@ -88,15 +95,16 @@ export default function Sidebar({
             <div
               key={conversation.id}
               onClick={() => onSelectConversation(conversation.id)}
-              className={`conversation-item ${
-                currentConversation === conversation.id ? "active" : ""
-              }`}
+              className={`conversation-item ${currentConversation === conversation.id ? "active" : ""}`}
             >
-              <div className="conversation-title">{conversation.title}</div>
+              <div className="conversation-title">
+                {conversation.title || "New Conversation"} 
+              </div>
               <div className="conversation-meta">
                 <span>{formatDate(conversation.updated_at)}</span>
-                <span>{conversation.message_count} messages</span>
-              </div>
+            </div>
+
+
             </div>
           ))
         )}

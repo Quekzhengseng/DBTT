@@ -37,7 +37,7 @@ class ServiceManager:
         self.firebase_service = FirebaseService(credentials_path=firebase_credentials)
         
         # Initialize LLM service
-        self.llm_service = LLMService(api_key=openai_api_key)
+        self.llm_service = LLMService(api_key=openai_api_key, firebase_service=self.firebase_service)
         
         # Initialize text processor
         chunk_size = app.config.get("CHUNK_SIZE", 1000)

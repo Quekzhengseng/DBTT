@@ -9,6 +9,7 @@ export default function Home() {
   const [currentConversation, setCurrentConversation] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
+  const [conversationsUpdateTrigger, setConversationsUpdateTrigger] = useState(0);
 
   // Fetch conversations on initial load
   useEffect(() => {
@@ -98,8 +99,12 @@ export default function Home() {
         onNewConversation={createNewConversation}
         showUpload={showUpload}
         toggleUpload={toggleUpload}
+        conversationsUpdateTrigger={conversationsUpdateTrigger}
       />
-      <ChatInterface conversationId={currentConversation} />
+      <ChatInterface 
+        conversationId={currentConversation} 
+        onMessageSent={() => setConversationsUpdateTrigger(prev => prev + 1)} 
+      />
     </div>
   );
 }

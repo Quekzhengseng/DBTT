@@ -34,9 +34,11 @@ def create_app(config_name=None):
     # Register blueprints
     from .routes.chat import chat_bp
     from .routes.files import files_bp
+    from .routes.issues import issues_bp
     
     app.register_blueprint(chat_bp, url_prefix='/api/chat')
     app.register_blueprint(files_bp, url_prefix='/api/files')
+    app.register_blueprint(issues_bp, url_prefix='/api/issues')
     
     # Register error handlers
     from .utils.error_handlers import register_error_handlers
