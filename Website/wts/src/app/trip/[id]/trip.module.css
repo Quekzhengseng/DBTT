@@ -1,0 +1,813 @@
+/* app/trip/[id]/trip.module.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  font-family: Arial, sans-serif;
+}
+
+/* Header styles */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.nav {
+  display: flex;
+  gap: 2rem;
+}
+
+.navLink {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navLink:hover {
+  color: #0066cc;
+}
+
+.profileIcon {
+  margin-left: 1rem;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+/* Hero Banner */
+.heroBanner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.bannerImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Trip Info Bar */
+.tripInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 2rem;
+}
+
+.tripTitle h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+.tripTags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: #f0f4f8;
+  color: #2c5282;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.tripActions {
+  display: flex;
+  gap: 1rem;
+}
+
+.downloadBtn,
+.shareBtn {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.downloadBtn {
+  background-color: #f0f4f8;
+  color: #2c5282;
+  border: 1px solid #e2e8f0;
+}
+
+.shareBtn {
+  background-color: #2c5282;
+  color: white;
+  border: 1px solid #2c5282;
+}
+
+.downloadBtn:hover {
+  background-color: #e2e8f0;
+}
+
+.shareBtn:hover {
+  background-color: #1a365d;
+}
+
+/* Main Content Layout */
+.mainContent {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.tripDetailsSection {
+  flex: 2;
+}
+
+.recommendationsSection {
+  flex: 1;
+  background-color: #1e56a0;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem;
+  align-self: flex-start;
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+}
+
+/* Section Containers */
+.sectionContainer {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #eee;
+  color: #1e56a0;
+}
+
+.sectionIcon {
+  margin-right: 0.5rem;
+  color: #1e56a0;
+}
+
+.chevronIcon {
+  margin-left: auto;
+  color: #666;
+}
+
+/* Flight Info */
+.flightInfo {
+  padding: 1rem;
+}
+
+.flight {
+  margin-bottom: 1.5rem;
+}
+
+.flight:last-child {
+  margin-bottom: 0;
+}
+
+.flightDate {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.flightDetails {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+.flightTime {
+  flex: 1;
+  text-align: center;
+}
+
+.time {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.airport {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.flightDuration {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.durationLine {
+  width: 100%;
+  height: 2px;
+  background-color: #ddd;
+  position: relative;
+}
+
+.durationLine::before,
+.durationLine::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #ddd;
+  top: -2px;
+}
+
+.durationLine::before {
+  left: 0;
+}
+
+.durationLine::after {
+  right: 0;
+}
+
+.durationText {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.flightPrice {
+  margin-left: auto;
+  text-align: right;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #1e56a0;
+}
+
+.checkoutBtn {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #1e56a0;
+  color: white;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.checkoutBtn:hover {
+  background-color: #154a8c;
+}
+
+/* Hotel Info */
+.hotelInfo {
+  display: flex;
+  padding: 1rem;
+}
+
+.hotelImageContainer {
+  width: 120px;
+  height: 100px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 1rem;
+}
+
+.hotelImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hotelDetails {
+  flex: 1;
+}
+
+.hotelName {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.hotelLocation {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.hotelStay {
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.hotelCheckout {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.hotelAmenities h4 {
+  margin: 0 0 0.3rem 0;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.hotelAmenities ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hotelAmenities li {
+  font-size: 0.8rem;
+  color: #666;
+  background-color: #f0f4f8;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Day Container */
+.dayContainer {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.flightActions {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.confirmedStatus {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #4caf50;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.checkIcon {
+  flex-shrink: 0;
+}
+
+.confirmedBooking {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #e8f5e9;
+  color: #4caf50;
+  border: none;
+  font-weight: 600;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.activityCheckout {
+  margin-top: 0.8rem;
+}
+
+.checkoutButton {
+  background-color: #1e56a0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.checkoutButton:hover {
+  background-color: #174785;
+}
+
+.dayHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-bottom: 1px solid #eee;
+}
+
+.dayHeader h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.addActivity {
+  background-color: #f0f4f8;
+  color: #2c5282;
+  border: 1px solid #e2e8f0;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.addActivity:hover {
+  background-color: #e2e8f0;
+}
+
+.dayNotes {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  color: #666;
+  border-bottom: 1px solid #eee;
+  font-style: italic;
+}
+
+.activitiesSection {
+  padding: 1rem;
+}
+
+.activitiesSection h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.activitiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 50px;
+}
+
+/* Activity Item */
+.activity {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 1rem;
+  position: relative;
+  cursor: move;
+  transition: all 0.2s ease;
+}
+
+.activity:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.activity.dragging {
+  opacity: 0.5;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+.activityContent {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.activityHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.activityHeader h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.removeButton:hover {
+  color: #ff4757;
+}
+
+.activityTime {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.activityDescription {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.activityImageContainer {
+  width: 80px;
+  height: 60px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.activityImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activityPrice {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1e56a0;
+}
+
+.addButton {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: #1e56a0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #154a8c;
+}
+
+/* Recommendations Section */
+.recommendationsHeader {
+  margin-bottom: 1rem;
+}
+
+.recommendationsHeader h2 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.2rem;
+}
+
+.recommendationsSearch {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchBtn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.recommendationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recommendationCard {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Footer */
+.footer {
+  padding: 2rem 0;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footerLinks a {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footerLinks a:hover {
+  color: #1e56a0;
+}
+
+.footerInfo {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.footerInfo p {
+  margin: 0.2rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .mainContent {
+    flex-direction: column;
+  }
+
+  .recommendationsSection {
+    position: static;
+    width: 100%;
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tripInfo {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .flightDetails {
+    flex-wrap: wrap;
+  }
+
+  .hotelInfo {
+    flex-direction: column;
+  }
+
+  .hotelImageContainer {
+    width: 100%;
+    height: 150px;
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .nav,
+  .footerLinks {
+    display: none;
+  }
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.modalBody h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1.1rem;
+}
+
+.paymentForm {
+  margin-top: 1.5rem;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.formRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.formRow .formGroup {
+  flex: 1;
+}
+
+.modalFooter {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.cancelButton {
+  padding: 0.6rem 1.2rem;
+  background-color: #f5f5f5;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.payButton {
+  padding: 0.6rem 1.2rem;
+  background-color: #1e56a0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
