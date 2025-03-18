@@ -1,14 +1,15 @@
 // app/search/page.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import TripDetailModal from "../../components/TripDetailModal";
 import styles from "./search.module.css";
 
-export default function SearchResults() {
+// SearchContent component that uses useSearchParams
+const SearchContent = () => {
   const searchParams = useSearchParams();
   const destination = searchParams.get("destination") || "";
   const [searchQuery, setSearchQuery] = useState(destination);
@@ -396,58 +397,7 @@ export default function SearchResults() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Header */}
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <Link href="/">
-            <Image
-              src="/wts-logo.png"
-              alt="WTS Travel Logo"
-              width={120}
-              height={40}
-            />
-          </Link>
-        </div>
-        <nav className={styles.nav}>
-          <Link href="/plan-trip" className={styles.navLink}>
-            Plan a trip
-          </Link>
-          <Link href="/tours" className={styles.navLink}>
-            Tours
-          </Link>
-          <Link href="/promotions" className={styles.navLink}>
-            Promotions
-          </Link>
-          <Link href="/about" className={styles.navLink}>
-            About Us
-          </Link>
-        </nav>
-        <div className={styles.profileIcon}>
-          <Image
-            src="/profile-avatar.png"
-            alt="Profile"
-            width={32}
-            height={32}
-            className={styles.avatar}
-          />
-        </div>
-      </header>
-
-      {/* Hero Banner */}
-      <div className={styles.heroBanner}>
-        <Image
-          src="/japan-banner.jpg"
-          alt="Japan Mountains"
-          width={1200}
-          height={300}
-          className={styles.bannerImage}
-        />
-        <div className={styles.bannerOverlay}>
-          <h1 className={styles.bannerTitle}>Explore with WTS</h1>
-        </div>
-      </div>
-
+    <>
       {/* Search Bar */}
       <div className={styles.searchBarContainer}>
         <form onSubmit={handleSearch} className={styles.searchForm}>
@@ -562,12 +512,90 @@ export default function SearchResults() {
         ))}
       </div>
 
+      {/* Trip Detail Modal */}
+      <TripDetailModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        tripData={selectedTrip}
+        onTripCreated={handleTripCreation}
+      />
+    </>
+  );
+};
+
+// Main search page component with suspense boundary
+export default function SearchResults() {
+  return (
+    <div className={styles.container}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <Link href="/">
+            <Image
+              src="/wts-logo.png"
+              alt="WTS Travel Logo"
+              width={120}
+              height={40}
+            />
+          </Link>
+        </div>
+        <nav className={styles.nav}>
+          <Link href="/plan-trip" className={styles.navLink}>
+            Plan a trip
+          </Link>
+          <Link href="/tours" className={styles.navLink}>
+            Tours
+          </Link>
+          <Link href="/promotions" className={styles.navLink}>
+            Promotions
+          </Link>
+          <Link href="/about" className={styles.navLink}>
+            About Us
+          </Link>
+        </nav>
+        <div className={styles.profileIcon}>
+          <Image
+            src="/profile-avatar.png"
+            alt="Profile"
+            width={32}
+            height={32}
+            className={styles.avatar}
+          />
+        </div>
+      </header>
+
+      {/* Hero Banner */}
+      <div className={styles.heroBanner}>
+        <Image
+          src="/japan-banner.jpg"
+          alt="Japan Mountains"
+          width={1200}
+          height={300}
+          className={styles.bannerImage}
+        />
+        <div className={styles.bannerOverlay}>
+          <h1 className={styles.bannerTitle}>Explore with WTS</h1>
+        </div>
+      </div>
+
+      {/* Wrap the component using useSearchParams in Suspense boundary */}
+      <Suspense
+        fallback={
+          <div className={styles.loadingContainer}>
+            <div className={styles.spinner}></div>
+            <p>Loading search results...</p>
+          </div>
+        }
+      >
+        <SearchContent />
+      </Suspense>
+
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerInfo}>
           <p>WTS Travel & Tours Pte Ltd</p>
           <p>旅行社牌照号码 Travel Agent License Number: TA02307</p>
-          <p>Copyright 2023©</p>
+          <p>Copyright 2025©</p>
           <p>All rights reserved.</p>
         </div>
         <div className={styles.footerPartner}>
@@ -601,14 +629,6 @@ export default function SearchResults() {
           </button>
         </div>
       </footer>
-
-      {/* Trip Detail Modal */}
-      <TripDetailModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        tripData={selectedTrip}
-        onTripCreated={handleTripCreation}
-      />
     </div>
   );
 }
