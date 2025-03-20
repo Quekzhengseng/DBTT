@@ -52,7 +52,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "15 Feb - 19 Feb",
         price: 1099,
-        image: "/tokyo-listing2.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 3,
@@ -60,7 +60,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Feb - 25 Feb",
         price: 1299,
-        image: "/tokyo-listing3.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 4,
@@ -68,7 +68,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "22 Feb - 28 Feb",
         price: 1499,
-        image: "/tokyo-listing4.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 5,
@@ -76,7 +76,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "1 Mar - 4 Mar",
         price: 899,
-        image: "/tokyo-listing5.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 6,
@@ -84,7 +84,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "5 Mar - 9 Mar",
         price: 1099,
-        image: "/tokyo-listing6.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 7,
@@ -92,7 +92,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "10 Mar - 15 Mar",
         price: 1299,
-        image: "/tokyo-listing7.jpg",
+        image: "/tokyo-listing1.jpg",
       },
       {
         id: 8,
@@ -100,7 +100,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Mar - 21 Mar",
         price: 1499,
-        image: "/tokyo-listing8.jpg",
+        image: "/tokyo-listing1.jpg",
       },
     ],
     themes: [
@@ -118,7 +118,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "18 Feb - 23 Feb",
         price: 1199,
-        image: "/tokyo-theme2.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 3,
@@ -126,7 +126,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "5 Mar - 8 Mar",
         price: 999,
-        image: "/tokyo-theme3.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 4,
@@ -134,7 +134,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "12 Mar - 16 Mar",
         price: 1099,
-        image: "/tokyo-theme4.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 5,
@@ -142,7 +142,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Mar - 25 Mar",
         price: 1299,
-        image: "/tokyo-theme5.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 6,
@@ -150,7 +150,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Feb - 21 Feb",
         price: 1499,
-        image: "/tokyo-theme6.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 7,
@@ -158,7 +158,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "22 Feb - 26 Feb",
         price: 1199,
-        image: "/tokyo-theme7.jpg",
+        image: "/tokyo-theme1.jpg",
       },
       {
         id: 8,
@@ -166,7 +166,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "10 Mar - 13 Mar",
         price: 999,
-        image: "/tokyo-theme8.jpg",
+        image: "/tokyo-theme1.jpg",
       },
     ],
     "free-easy": [
@@ -184,7 +184,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "15 Feb - 19 Feb",
         price: 899,
-        image: "/tokyo-free2.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 3,
@@ -192,7 +192,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Feb - 25 Feb",
         price: 999,
-        image: "/tokyo-free3.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 4,
@@ -200,7 +200,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "22 Feb - 28 Feb",
         price: 1099,
-        image: "/tokyo-free4.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 5,
@@ -208,7 +208,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "1 Mar - 4 Mar",
         price: 799,
-        image: "/tokyo-free5.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 6,
@@ -216,7 +216,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "5 Mar - 9 Mar",
         price: 899,
-        image: "/tokyo-free6.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 7,
@@ -224,7 +224,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "10 Mar - 15 Mar",
         price: 999,
-        image: "/tokyo-free7.jpg",
+        image: "/tokyo-free1.jpg",
       },
       {
         id: 8,
@@ -232,7 +232,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Mar - 21 Mar",
         price: 1099,
-        image: "/tokyo-free8.jpg",
+        image: "/tokyo-free1.jpg",
       },
     ],
     activities: [
@@ -250,7 +250,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 149,
-        image: "/tokyo-activity2.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 3,
@@ -258,7 +258,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 129,
-        image: "/tokyo-activity3.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 4,
@@ -266,7 +266,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Available Daily",
         price: 79,
-        image: "/tokyo-activity4.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 5,
@@ -274,7 +274,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 89,
-        image: "/tokyo-activity5.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 6,
@@ -282,7 +282,7 @@ const SearchContent = () => {
         subTitle: "Evening",
         dates: "Available Daily",
         price: 119,
-        image: "/tokyo-activity6.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 7,
@@ -290,7 +290,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Available Daily",
         price: 99,
-        image: "/tokyo-activity7.jpg",
+        image: "/tokyo-activity1.jpg",
       },
       {
         id: 8,
@@ -298,7 +298,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Selected Days",
         price: 109,
-        image: "/tokyo-activity8.jpg",
+        image: "/tokyo-activity1.jpg",
       },
     ],
   };

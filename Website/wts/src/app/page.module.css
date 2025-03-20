@@ -324,7 +324,7 @@
   position: absolute;
   width: 50px;
   height: 50px;
-  background-image: url('/plane-icon.png');
+  background-image: url("/plane-icon.png");
   background-size: contain;
   background-repeat: no-repeat;
   top: 50%;
@@ -336,7 +336,7 @@
   position: absolute;
   width: 150px;
   height: 80px;
-  background-image: url('/dash-path.png');
+  background-image: url("/dash-path.png");
   background-size: contain;
   background-repeat: no-repeat;
   top: 60%;
@@ -382,7 +382,9 @@
   position: relative;
   border-radius: 10px;
   overflow: hidden;
-  min-width: 200px;
+  width: 200px !important;
+  height: 150px !important;
+  object-fit: cover; /* Ensures image fills the area */
 }
 
 .packageImage {
@@ -398,7 +400,7 @@
   left: 0;
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
   color: white;
 }
 
@@ -527,7 +529,7 @@
   left: 0;
   width: 100%;
   padding: 1rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: white;
 }
 
@@ -618,12 +620,12 @@
   .twoColumnSection {
     flex-direction: column;
   }
-  
+
   .dateInputs {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .nav {
     display: none;
   }

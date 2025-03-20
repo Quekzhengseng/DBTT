@@ -135,17 +135,12 @@
   flex: 2;
 }
 
-.recommendationsSection {
-  flex: 1;
+.recommendationsContainer,
+.addedActivitiesContainer {
   background-color: #1e56a0;
   color: white;
   border-radius: 10px;
   padding: 1rem;
-  align-self: flex-start;
-  position: sticky;
-  top: 20px;
-  max-height: calc(100vh - 40px);
-  overflow-y: auto;
 }
 
 /* Section Containers */
@@ -809,5 +804,101 @@
   color: white;
   border: none;
   border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Add to trip.module.css */
+
+/* Main Content Layout with Sidebars */
+.mainContent {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.tripDetailsSection {
+  flex: 2;
+}
+
+/* Added Activities Section */
+.addedActivitiesSection {
+  margin-top: 1rem;
+  background-color: #4caf50; /* Different color to distinguish it */
+}
+
+.addedActivitiesHeader {
+  margin-bottom: 1rem;
+}
+
+.addedActivitiesHeader h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.addedActivitiesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Recommendations Section */
+.recommendationsSection {
+  background-color: #1e56a0;
+  color: white;
+  border-radius: 10px;
+  max-height: calc(50vh - 30px);
+  flex: 1;
+  position: relative;
+}
+
+.recommendationsList {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Common Sidebar Styles */
+.sidebarHeader {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebarHeader h2 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.sidebarContent {
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.recommendationsSearch {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.searchBtn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9rem;
   cursor: pointer;
 }

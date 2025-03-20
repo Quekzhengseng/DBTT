@@ -586,6 +586,32 @@ export default function Home() {
                   <p>France</p>
                 </div>
               </div>
+              <div className={styles.package}>
+                <Image
+                  src="/xian-package.jpg"
+                  alt="Xian"
+                  width={200}
+                  height={150}
+                  className={styles.packageImage}
+                />
+                <div className={styles.packageInfo}>
+                  <h3>Xi-An</h3>
+                  <p>China</p>
+                </div>
+              </div>
+              <div className={styles.package}>
+                <Image
+                  src="/korea-package.jpg"
+                  alt="Korea"
+                  width={200}
+                  height={150}
+                  className={styles.packageImage}
+                />
+                <div className={styles.packageInfo}>
+                  <h3>Seoul</h3>
+                  <p>Korea</p>
+                </div>
+              </div>
             </div>
             <button className={styles.sliderButton + " " + styles.nextButton}>
               ›
@@ -655,33 +681,35 @@ export default function Home() {
                     <button className={styles.likeButton}>❤</button>
                   </div>
                 </div>
-                <div className={styles.blogPost}>
-                  <div className={styles.blogImageContainer}>
-                    <Image
-                      src="/london-blog.jpg"
-                      alt="London"
-                      width={200}
-                      height={150}
-                      className={styles.blogImage}
-                    />
-                    <div className={styles.blogOverlay}>
-                      <h3>10 must-see attractions in London</h3>
-                    </div>
-                  </div>
-                  <div className={styles.blogMeta}>
-                    <div className={styles.blogAuthor}>
+                <Link href="/blog/tokyo-japan">
+                  <div className={styles.blogPost}>
+                    <div className={styles.blogImageContainer}>
                       <Image
-                        src="/author-mary.jpg"
-                        alt="Mary"
-                        width={24}
-                        height={24}
-                        className={styles.authorAvatar}
+                        src="/Japan-blog.jpg"
+                        alt="Japan-Tokyo"
+                        width={200}
+                        height={150}
+                        className={styles.blogImage}
                       />
-                      <span>Mary</span>
+                      <div className={styles.blogOverlay}>
+                        <h3>7 Day Trip to Tokyo, Japan</h3>
+                      </div>
                     </div>
-                    <button className={styles.likeButton}>❤</button>
+                    <div className={styles.blogMeta}>
+                      <div className={styles.blogAuthor}>
+                        <Image
+                          src="/author-mary.jpg"
+                          alt="Mary"
+                          width={24}
+                          height={24}
+                          className={styles.authorAvatar}
+                        />
+                        <span>Mary</span>
+                      </div>
+                      <button className={styles.likeButton}>❤</button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
               <button className={styles.sliderButton + " " + styles.nextButton}>
                 ›

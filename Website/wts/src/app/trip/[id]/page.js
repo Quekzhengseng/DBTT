@@ -436,6 +436,18 @@ const TripItineraryPage = () => {
     },
   ]);
 
+  const [addedActivities, setAddedActivities] = useState([
+    {
+      id: "added-1",
+      title: "Sensoji Temple",
+      description: "Tokyo's oldest temple with iconic red lantern",
+      image: "/sensoji-detail.jpg",
+      price: 0,
+      duration: "2 hours",
+      rating: 4.8,
+    },
+  ]);
+
   // Handle payment completion
   const handlePaymentComplete = (itemId, itemType) => {
     console.log("Payment completed for:", itemId, itemType);
@@ -952,28 +964,52 @@ const TripItineraryPage = () => {
 
           {/* Right Section - Recommendations */}
           <div className={styles.recommendationsSection}>
-            <div className={styles.recommendationsHeader}>
-              <h2>WTS Recommendations</h2>
-              <div className={styles.recommendationsSearch}>
-                <input
-                  type="text"
-                  placeholder="Customize your journey with..."
-                  className={styles.searchInput}
-                />
-                <button className={styles.searchBtn}>Search</button>
-              </div>
-            </div>
-            <div className={styles.recommendationsList}>
-              {recommendations.map((recommendation, index) => (
-                <div key={index} className={styles.recommendationCard}>
-                  <DraggableActivity
-                    activity={recommendation}
-                    index={index}
-                    origin="recommendations"
-                    onAddToDay={handleAddToDay}
-                  />
+            <div className={styles.sidebarContent}>
+              {/* Recommendations */}
+              <div className={styles.recommendationsContainer}>
+                <div className={styles.recommendationsHeader}>
+                  <h2>WTS Recommendations</h2>
+                  <div className={styles.recommendationsSearch}>
+                    <input
+                      type="text"
+                      placeholder="Customize your journey with..."
+                      className={styles.searchInput}
+                    />
+                    <button className={styles.searchBtn}>Search</button>
+                  </div>
                 </div>
-              ))}
+                <div className={styles.recommendationsList}>
+                  {recommendations.map((recommendation, index) => (
+                    <div key={index} className={styles.recommendationCard}>
+                      <DraggableActivity
+                        activity={recommendation}
+                        index={index}
+                        origin="recommendations"
+                        onAddToDay={handleAddToDay}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Added Activities */}
+              <div className={styles.addedActivitiesContainer}>
+                <div className={styles.addedActivitiesHeader}>
+                  <h2>Added Activities</h2>
+                </div>
+                <div className={styles.recommendationsList}>
+                  {addedActivities.map((activity, index) => (
+                    <div key={index} className={styles.recommendationCard}>
+                      <DraggableActivity
+                        activity={activity}
+                        index={index}
+                        origin="recommendations"
+                        onAddToDay={handleAddToDay}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
