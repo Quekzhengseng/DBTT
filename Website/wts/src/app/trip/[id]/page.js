@@ -257,6 +257,10 @@ const TripItineraryPage = () => {
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  // State for pending payments calculation
+  const [totalPendingAmount, setTotalPendingAmount] = useState(0);
+  const [pendingItemsCount, setPendingItemsCount] = useState(0);
+
   // State for trip details
   const [tripDetails, setTripDetails] = useState({
     id: tripId,
@@ -378,6 +382,53 @@ const TripItineraryPage = () => {
     6: [],
   });
 
+  // Calculate total pending payments whenever trip details or activities change
+  useEffect(() => {
+    // Calculate pending amounts and count
+    let total = 0;
+    let count = 0;
+
+    // Check flights
+    tripDetails.flights.forEach((flight) => {
+      if (flight.status === "pending") {
+        total += flight.price;
+        count++;
+      }
+    });
+
+    // Check hotel
+    if (tripDetails.hotel.status === "pending") {
+      total += tripDetails.hotel.price;
+      count++;
+    }
+
+    // Check activities across all days
+    Object.values(dayActivities).forEach((activities) => {
+      activities.forEach((activity) => {
+        if (activity.status === "pending" && activity.price > 0) {
+          total += activity.price;
+          count++;
+        }
+      });
+    });
+
+    setTotalPendingAmount(total);
+    setPendingItemsCount(count);
+  }, [tripDetails, dayActivities]);
+
+  // Load saved data from localStorage
+  useEffect(() => {
+    const savedTripDetails = localStorage.getItem(`trip_${tripId}`);
+    if (savedTripDetails) {
+      setTripDetails(JSON.parse(savedTripDetails));
+    }
+
+    const savedActivities = localStorage.getItem(`activities_${tripId}`);
+    if (savedActivities) {
+      setDayActivities(JSON.parse(savedActivities));
+    }
+  }, [tripId]);
+
   // Recommended activities
   const [recommendations, setRecommendations] = useState([
     {
@@ -460,20 +511,38 @@ const TripItineraryPage = () => {
           flight.id === itemId ? { ...flight, status: "confirmed" } : flight
         );
 
-        return {
+        const updatedTripDetails = {
           ...prev,
           flights: updatedFlights,
         };
+
+        // Save to localStorage
+        localStorage.setItem(
+          `trip_${tripId}`,
+          JSON.stringify(updatedTripDetails)
+        );
+
+        return updatedTripDetails;
       });
     } else if (itemType === "hotel") {
       // Update hotel status
-      setTripDetails((prev) => ({
-        ...prev,
-        hotel: {
-          ...prev.hotel,
-          status: "confirmed",
-        },
-      }));
+      setTripDetails((prev) => {
+        const updatedTripDetails = {
+          ...prev,
+          hotel: {
+            ...prev.hotel,
+            status: "confirmed",
+          },
+        };
+
+        // Save to localStorage
+        localStorage.setItem(
+          `trip_${tripId}`,
+          JSON.stringify(updatedTripDetails)
+        );
+
+        return updatedTripDetails;
+      });
     } else if (itemType === "activity") {
       // Find which day contains the activity
       let foundDay = null;
@@ -495,6 +564,12 @@ const TripItineraryPage = () => {
             activity.id === itemId
               ? { ...activity, status: "confirmed" }
               : activity
+          );
+
+          // Save to localStorage
+          localStorage.setItem(
+            `activities_${tripId}`,
+            JSON.stringify(updatedActivities)
           );
 
           return updatedActivities;
@@ -808,6 +883,11 @@ const TripItineraryPage = () => {
                       <div className={styles.time}>16:40</div>
                       <div className={styles.airport}>SIN T1</div>
                     </div>
+                    <div className={styles.flightPrice}>
+                      <div className={styles.price}>
+                        ${tripDetails.flights[0].price}
+                      </div>
+                    </div>
                   </div>
                   <div className={styles.flightActions}>
                     {tripDetails.flights[1].status === "pending" ? (
@@ -1011,6 +1091,27 @@ const TripItineraryPage = () => {
                 </div>
               </div>
             </div>
+            {/* Payment Summary Button */}
+            {pendingItemsCount > 0 && (
+              <div className={styles.paymentSummarySection}>
+                <div className={styles.pendingSummary}>
+                  <div className={styles.pendingInfo}>
+                    <div className={styles.pendingCount}>
+                      {pendingItemsCount} items pending
+                    </div>
+                    <div className={styles.pendingAmount}>
+                      ${totalPendingAmount.toFixed(2)}
+                    </div>
+                  </div>
+                  <Link
+                    href={`/payment?tripId=${tripId}`}
+                    className={styles.paymentSummaryButton}
+                  >
+                    Make Payment
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
