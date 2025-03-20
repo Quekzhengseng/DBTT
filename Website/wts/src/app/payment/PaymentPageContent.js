@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./payment.module.css";
 
-const PaymentPage = () => {
+const PaymentPageContent = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tripId = searchParams.get("tripId");
@@ -536,4 +536,4 @@ const PaymentPage = () => {
   );
 };
 
-export default PaymentPage;
+export default PaymentPageContent;
