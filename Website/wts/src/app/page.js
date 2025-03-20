@@ -626,25 +626,46 @@ export default function Home() {
             <h2 className={styles.sectionTitle}>MY TRIPS</h2>
             <div className={styles.tripsList}>
               {savedTrips.map((trip) => (
-                <Link
-                  href={`/trip/${trip.id}`}
-                  key={trip.id}
-                  className={styles.tripCardLink}
-                >
-                  <div className={styles.tripCard}>
-                    <div className={styles.tripInfo}>
-                      <h3>{trip.destination}</h3>
-                      <p>{trip.dates}</p>
+                <div key={trip.id} className={styles.tripCardContainer}>
+                  <Link
+                    href={`/trip/${trip.id}`}
+                    className={styles.tripCardLink}
+                  >
+                    <div className={styles.tripCard}>
+                      <div className={styles.tripInfo}>
+                        <h3>{trip.destination}</h3>
+                        <p>{trip.dates}</p>
+                      </div>
+                      <Image
+                        src={trip.image}
+                        alt={trip.destination}
+                        width={100}
+                        height={80}
+                        className={styles.tripImage}
+                      />
                     </div>
-                    <Image
-                      src={trip.image}
-                      alt={trip.destination}
-                      width={100}
-                      height={80}
-                      className={styles.tripImage}
-                    />
-                  </div>
-                </Link>
+                  </Link>
+                  <button
+                    className={styles.deleteButton}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      // Filter out the trip with this ID
+                      const updatedTrips = savedTrips.filter(
+                        (t) => t.id !== trip.id
+                      );
+                      // Update state
+                      setSavedTrips(updatedTrips);
+                      // Update localStorage
+                      localStorage.setItem(
+                        "savedTrips",
+                        JSON.stringify(updatedTrips)
+                      );
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
             </div>
           </section>

@@ -630,3 +630,33 @@
     display: none;
   }
 }
+
+.tripCardContainer {
+  position: relative;
+  width: 100%;
+}
+
+.deleteButton {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background-color 0.2s;
+}
+
+.deleteButton:hover {
+  background-color: #ff4444;
+  color: white;
+}
