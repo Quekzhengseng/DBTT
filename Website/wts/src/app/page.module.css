@@ -78,6 +78,9 @@
   text-align: center;
   padding: 2rem 0;
   margin-bottom: 3rem;
+  background-image: url("/mountainbanner.jpg"); /* Add your banner image */
+  background-size: cover;
+  background-position: center;
 }
 
 .planTripTitle {
@@ -348,15 +351,27 @@
 .packagesSection {
   background-color: #143c8c;
   border-radius: 15px;
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
   color: white;
 }
 
 .sectionTitle {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   font-size: 1.3rem;
   font-weight: bold;
+
+  color: #333;
+  padding: 0 0.5rem;
+}
+
+.sectionTitle1 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: bold;
+
+  color: white;
+  padding: 0 0.5rem;
 }
 
 .packageSlider {
@@ -440,6 +455,17 @@
   gap: 2rem;
   margin-bottom: 2rem;
 }
+.twoColumnContainer {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
 .myTripsSection {
   flex: 1;
@@ -447,6 +473,29 @@
   border-radius: 15px;
   padding: 1.5rem;
   color: white;
+}
+
+.myTripsSubnav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0 1rem;
+}
+
+.myTripsSubnav button {
+  background: none;
+  border: none;
+  color: white;
+  opacity: 0.6;
+  font-weight: bold;
+  padding: 0.5rem 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.activebutton {
+  opacity: 1;
+  border-bottom: 2px solid white;
 }
 
 .tripsList {

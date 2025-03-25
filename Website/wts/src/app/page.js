@@ -541,7 +541,7 @@ export default function Home() {
 
         {/* Packages Section */}
         <section className={styles.packagesSection}>
-          <h2 className={styles.sectionTitle}>Recommended For You</h2>
+          <h2 className={styles.sectionTitle1}>Recommended For You</h2>
           <div className={styles.packageSlider}>
             <button className={styles.sliderButton + " " + styles.prevButton}>
               ‹
