@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
+import { Loader2 } from "lucide-react";
 
 export default function Home() {
   const [conversations, setConversations] = useState([]);
@@ -15,6 +16,7 @@ export default function Home() {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
+        setLoading(true);
         const response = await fetch(
           "http://localhost:5001/api/chat/conversations"
         );
@@ -57,7 +59,6 @@ export default function Home() {
           title,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          message_count: 0,
         };
 
         setConversations((prev) => [newConversation, ...prev]);
@@ -80,11 +81,13 @@ export default function Home() {
 
   if (loading && conversations.length === 0) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="loading-dots">
-          <div className="dot"></div>
-          <div className="dot"></div>
-          <div className="dot"></div>
+      <div className="flex items-center justify-center h-screen bg-white">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4">
+            <Loader2 className="w-8 h-8 text-[#3eafdb] animate-spin" />
+          </div>
+          <h2 className="text-xl font-medium text-[#22337c] mb-2">Loading WTS Travel Assistant</h2>
+          <p className="text-gray-500">Please wait while we prepare your experience</p>
         </div>
       </div>
     );
@@ -92,6 +95,7 @@ export default function Home() {
 
   return (
     <div className="app-container">
+      {/* Sidebar component with conversation history and controls */}
       <Sidebar
         conversations={conversations}
         currentConversation={currentConversation}
@@ -101,6 +105,8 @@ export default function Home() {
         toggleUpload={toggleUpload}
         conversationsUpdateTrigger={conversationsUpdateTrigger}
       />
+      
+      {/* Main chat interface */}
       <ChatInterface 
         conversationId={currentConversation} 
         onMessageSent={() => setConversationsUpdateTrigger(prev => prev + 1)} 

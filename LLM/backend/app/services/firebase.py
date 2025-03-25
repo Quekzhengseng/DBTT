@@ -16,6 +16,7 @@ class FirebaseService:
                 firebase_admin.initialize_app(cred)
                 self.db = firestore.client()
                 self.initialized = True
+                print("✅ Firebase successfully initialized with credentials file")
             except Exception as e:
                 print(f"Firebase initialization error: {e}")
                 self.initialized = False
@@ -23,6 +24,7 @@ class FirebaseService:
             # Initialize without credentials for mock/local mode
             self.initialized = False
             self.local_storage = {'conversations': {}}
+            print("⚠️ Firebase initialized in local/mock mode (no credentials)")
     
     def create_conversation(self, title="New Conversation"):
         """Create a new conversation with a generated ID."""
@@ -44,6 +46,7 @@ class FirebaseService:
 
         return conversation_id
     
+ 
     def log_complaint(self, user_id, user_message, intent, urgency, order_id=None, user_name=None, user_email=None):
         """Logs user complaint into Firebase with a ticket ID."""
         ticket_id = str(datetime.datetime.now().timestamp()).replace('.', '')
@@ -64,10 +67,47 @@ class FirebaseService:
         }
 
         if self.initialized:
-            self.db.collection("complaints").document(ticket_id).set(complaint_data)
+            try:
+                # Make sure to properly format the data for Firestore
+                formatted_data = {}
+                for key, value in complaint_data.items():
+                    if isinstance(value, datetime.datetime):
+                        # Keep datetime objects as they work in Firestore
+                        formatted_data[key] = value
+                    elif value is None:
+                        # Set explicit null values to empty strings for better display
+                        formatted_data[key] = ""
+                    else:
+                        formatted_data[key] = value
+                
+                self.db.collection("complaints").document(ticket_id).set(formatted_data)
+                print(f"✅ Complaint logged in Firebase with ID: {ticket_id}")
+                print(f"Firebase data: {formatted_data}")
+            except Exception as e:
+                print(f"⚠️ Error logging complaint in Firebase: {e}")
+                # Fall back to local storage
+                if not hasattr(self, 'local_storage'):
+                    self.local_storage = {}
+                
+                if 'complaints' not in self.local_storage:
+                    self.local_storage['complaints'] = {}
+                    
+                self.local_storage['complaints'][ticket_id] = complaint_data
+                print(f"✅ Complaint logged in local storage with ID: {ticket_id}")
+        else:
+            # Store in local storage if Firebase isn't initialized
+            if not hasattr(self, 'local_storage'):
+                self.local_storage = {}
+            
+            if 'complaints' not in self.local_storage:
+                self.local_storage['complaints'] = {}
+                
+            self.local_storage['complaints'][ticket_id] = complaint_data
+            print(f"✅ Complaint logged in local storage with ID: {ticket_id}")
+            print(f"Local storage data: {complaint_data}")
 
         return ticket_id
-
+    
     def get_conversation_history(self, conversation_id):
         """Retrieve conversation history for a specific conversation."""
         if not conversation_id:
@@ -189,3 +229,164 @@ class FirebaseService:
                 }
                 for conv_id, conv in self.local_storage['conversations'].items()
             ]
+        
+
+    def get_all_tickets(self):
+        """Retrieve all submitted tickets for the CRM dashboard with safer serialization."""
+        tickets = []
+        
+        try:
+            print("Getting all tickets...")
+            
+            if self.initialized:
+                # Firebase initialized, try to get tickets
+                try:
+                    print("Firebase initialized, querying Firestore...")
+                    query = self.db.collection('complaints').order_by('created_at', direction=firestore.Query.DESCENDING)
+                    docs = query.stream()
+                    
+                    # Debug: Count the documents
+                    doc_count = 0
+                    for doc in docs:
+                        doc_count += 1
+                        try:
+                            # Get document data
+                            ticket_data = doc.to_dict()
+                            
+                            # Manually convert each ticket to ensure it's serializable
+                            safe_ticket = {
+                                "ticket_id": str(ticket_data.get("ticket_id", "")),
+                                "user_id": str(ticket_data.get("user_id", "")),
+                                "message": str(ticket_data.get("message", "")),
+                                "intent": str(ticket_data.get("intent", "")),
+                                "urgency": str(ticket_data.get("urgency", "")),
+                                "status": str(ticket_data.get("status", "Open")),
+                                "user_name": str(ticket_data.get("user_name", "")),
+                                "user_email": str(ticket_data.get("user_email", "")),
+                                "order_id": str(ticket_data.get("order_id", ""))
+                            }
+                            
+                            # Safely handle timestamps
+                            if "created_at" in ticket_data:
+                                try:
+                                    timestamp = ticket_data["created_at"]
+                                    if hasattr(timestamp, "isoformat"):
+                                        safe_ticket["created_at"] = timestamp.isoformat()
+                                    else:
+                                        safe_ticket["created_at"] = str(timestamp)
+                                except:
+                                    safe_ticket["created_at"] = str(datetime.datetime.now())
+                            else:
+                                safe_ticket["created_at"] = str(datetime.datetime.now())
+                                
+                            if "updated_at" in ticket_data:
+                                try:
+                                    timestamp = ticket_data["updated_at"]
+                                    if hasattr(timestamp, "isoformat"):
+                                        safe_ticket["updated_at"] = timestamp.isoformat()
+                                    else:
+                                        safe_ticket["updated_at"] = str(timestamp)
+                                except:
+                                    safe_ticket["updated_at"] = str(datetime.datetime.now())
+                            else:
+                                safe_ticket["updated_at"] = str(datetime.datetime.now())
+                            
+                            tickets.append(safe_ticket)
+                            print(f"Processed ticket: {safe_ticket['ticket_id']}")
+                        except Exception as doc_error:
+                            print(f"Error processing document: {doc_error}")
+                            import traceback
+                            traceback.print_exc()
+                    
+                    print(f"Found {doc_count} documents, processed {len(tickets)} tickets")
+                    
+                except Exception as firebase_error:
+                    print(f"Firebase error: {firebase_error}")
+                    import traceback
+                    traceback.print_exc()
+            else:
+                # Use local storage
+                print("Firebase not initialized, using local storage")
+                if hasattr(self, 'local_storage') and 'complaints' in self.local_storage:
+                    for ticket_id, ticket_data in self.local_storage['complaints'].items():
+                        # Create a safe copy with string values
+                        safe_ticket = {
+                            "ticket_id": str(ticket_data.get("ticket_id", "")),
+                            "user_id": str(ticket_data.get("user_id", "")),
+                            "message": str(ticket_data.get("message", "")),
+                            "intent": str(ticket_data.get("intent", "")),
+                            "urgency": str(ticket_data.get("urgency", "")),
+                            "status": str(ticket_data.get("status", "Open")),
+                            "user_name": str(ticket_data.get("user_name", "")),
+                            "user_email": str(ticket_data.get("user_email", "")),
+                            "order_id": str(ticket_data.get("order_id", ""))
+                        }
+                        
+                        # Handle timestamps
+                        if "created_at" in ticket_data:
+                            timestamp = ticket_data["created_at"]
+                            if isinstance(timestamp, datetime.datetime):
+                                safe_ticket["created_at"] = timestamp.isoformat()
+                            else:
+                                safe_ticket["created_at"] = str(timestamp)
+                        else:
+                            safe_ticket["created_at"] = str(datetime.datetime.now())
+                            
+                        if "updated_at" in ticket_data:
+                            timestamp = ticket_data["updated_at"]
+                            if isinstance(timestamp, datetime.datetime):
+                                safe_ticket["updated_at"] = timestamp.isoformat()
+                            else:
+                                safe_ticket["updated_at"] = str(timestamp)
+                        else:
+                            safe_ticket["updated_at"] = str(datetime.datetime.now())
+                        
+                        tickets.append(safe_ticket)
+                    
+                    print(f"Retrieved {len(tickets)} tickets from local storage")
+        
+        except Exception as e:
+            print(f"Global error in get_all_tickets: {e}")
+            import traceback
+            traceback.print_exc()
+        
+        # Return tickets (or empty list if none were found)
+        return tickets or []
+
+    def get_ticket(self, ticket_id):
+        """Retrieve a specific ticket by ticket_id."""
+        if self.initialized:
+            doc_ref = self.db.collection('complaints').document(ticket_id)
+            doc = doc_ref.get()
+            if doc.exists:
+                return doc.to_dict()
+            return None
+        else:
+            # Check local storage
+            if 'complaints' in self.local_storage and ticket_id in self.local_storage['complaints']:
+                return self.local_storage['complaints'][ticket_id]
+            return None
+
+    def update_ticket_status(self, ticket_id, new_status):
+        """Update the status of a ticket."""
+        if self.initialized:
+            try:
+                doc_ref = self.db.collection('complaints').document(ticket_id)
+                doc = doc_ref.get()
+                if doc.exists:
+                    doc_ref.update({
+                        'status': new_status,
+                        'updated_at': datetime.datetime.now()
+                    })
+                    return True
+                return False
+            except Exception as e:
+                print(f"Error updating ticket status: {e}")
+                return False
+        else:
+            # Update in local storage
+            if 'complaints' in self.local_storage and ticket_id in self.local_storage['complaints']:
+                self.local_storage['complaints'][ticket_id]['status'] = new_status
+                self.local_storage['complaints'][ticket_id]['updated_at'] = datetime.datetime.now()
+                return True
+            return False

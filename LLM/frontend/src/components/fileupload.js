@@ -1,265 +1,176 @@
-// src/components/FileUpload.js
-"use client";
+"use client"
 
-import { useState, useRef } from "react";
+import { useState, useRef } from "react"
+import { Upload, X, FileText } from "lucide-react"
 
 export default function FileUpload({ onUploadSuccess }) {
-  const [files, setFiles] = useState([]);
-  const [uploading, setUploading] = useState(false);
-  const [uploadResults, setUploadResults] = useState([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const dropZoneRef = useRef(null);
-  const fileInputRef = useRef(null);
+  const [files, setFiles] = useState([])
+  const [uploading, setUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [uploadResults, setUploadResults] = useState([])
+  const fileInputRef = useRef(null)
 
   // Handle file input change
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFiles(Array.from(e.target.files));
-      setUploadResults([]);
+      setFiles(Array.from(e.target.files))
+      setUploadResults([])
     }
-  };
-
-  // Prevent default behavior for all drag events
-  const handleDragEvent = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
-  // Handle drag enter
-  const handleDragEnter = (e) => {
-    handleDragEvent(e);
-    setIsDragging(true);
-  };
-
-  // Handle drag leave
-  const handleDragLeave = (e) => {
-    handleDragEvent(e);
-    // Only set dragging to false if we're leaving the drop zone (not a child element)
-    if (e.target === dropZoneRef.current) {
-      setIsDragging(false);
-    }
-  };
-
-  // Handle file drop
-  const handleDrop = (e) => {
-    handleDragEvent(e);
-    setIsDragging(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFiles(Array.from(e.dataTransfer.files));
-      setUploadResults([]);
-    }
-  };
+  }
 
   // Handle upload button click
   const handleUpload = async () => {
-    if (!files.length) return;
+    if (!files.length) return
 
-    setUploading(true);
-    setUploadResults([]);
+    setUploading(true)
+    setUploadProgress(0)
+    setUploadResults([])
 
-    const results = [];
+    const results = []
+    const totalFiles = files.length
+    let completedFiles = 0
 
     for (const file of files) {
       try {
-        const formData = new FormData();
-        formData.append("file", file);
+        const formData = new FormData()
+        formData.append("file", file)
 
         const response = await fetch("http://localhost:5001/api/files/upload", {
           method: "POST",
           body: formData,
-        });
+        })
 
-        const result = await response.json();
+        const result = await response.json()
 
         results.push({
           filename: file.name,
           success: response.ok,
-          message: response.ok
-            ? result.message
-            : result.error || "Upload failed",
-        });
+          message: response.ok ? result.message : result.error || "Upload failed",
+        })
+
+        // Update progress
+        completedFiles++
+        setUploadProgress(Math.round((completedFiles / totalFiles) * 100))
       } catch (error) {
-        console.error(`Error uploading file ${file.name}:`, error);
+        console.error(`Error uploading file ${file.name}:`, error)
         results.push({
           filename: file.name,
           success: false,
           message: "Network error occurred",
-        });
+        })
+
+        // Update progress even for failed uploads
+        completedFiles++
+        setUploadProgress(Math.round((completedFiles / totalFiles) * 100))
       }
     }
 
-    setUploadResults(results);
-    setUploading(false);
+    setUploadResults(results)
+    setUploading(false)
 
-    if (onUploadSuccess) {
-      onUploadSuccess();
+    // Call the success callback if at least one file was uploaded successfully
+    if (results.some((result) => result.success) && onUploadSuccess) {
+      onUploadSuccess()
     }
-  };
+  }
 
   // Remove a file from the list
   const removeFile = (index) => {
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
-  };
+    const newFiles = [...files]
+    newFiles.splice(index, 1)
+    setFiles(newFiles)
+  }
 
   return (
-    <div className="upload-container">
-      {/* Hidden file input */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: "none" }}
-        multiple
-        accept=".pdf,.txt,.docx,.md"
-      />
+    <div className="w-full">
+      <div>
+        {/* Hidden file input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          style={{ display: "none" }}
+          multiple
+          accept=".pdf,.txt,.docx,.md"
+        />
 
-      {/* Drop zone */}
-      <div
-        ref={dropZoneRef}
-        className={`drop-zone ${isDragging ? "active" : ""}`}
-        onClick={() => fileInputRef.current.click()}
-        onDragEnter={handleDragEnter}
-        onDragOver={handleDragEvent}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        style={{
-          border: `2px dashed ${isDragging ? "#3b82f6" : "#ccc"}`,
-          borderRadius: "8px",
-          padding: "40px 20px",
-          textAlign: "center",
-          backgroundColor: isDragging ? "rgba(59, 130, 246, 0.1)" : "#f9fafb",
-          cursor: "pointer",
-          transition: "all 0.2s ease",
-          marginBottom: "16px",
-        }}
-      >
-        <div>
-          <p style={{ fontSize: "16px", marginBottom: "8px" }}>
-            {isDragging
-              ? "Drop files here"
-              : "Drag & drop files here or click to browse"}
-          </p>
-          <p style={{ fontSize: "12px", color: "#6b7280" }}>
-            Supported formats: PDF, TXT, DOCX, MD
-          </p>
-        </div>
-      </div>
-
-      {/* File list */}
-      {files.length > 0 && (
-        <div
-          style={{
-            marginBottom: "16px",
-            backgroundColor: "#f3f4f6",
-            borderRadius: "8px",
-            padding: "12px",
-            border: "1px solid #e5e7eb",
-          }}
+        {/* Browse button */}
+        <button
+          onClick={() => fileInputRef.current.click()}
+          className="sidebar-button"
         >
-          <p
-            style={{ fontSize: "14px", fontWeight: "500", marginBottom: "8px" }}
+          <Upload className="w-4 h-4" />
+          Browse files
+        </button>
+
+        {/* File list */}
+        {files.length > 0 && (
+          <div className="mt-4">
+            <div className="space-y-2">
+              {files.map((file, index) => (
+                <div key={index} className="flex items-center justify-between bg-[#ecf9fd] p-2 rounded">
+                  <div className="flex items-center">
+                    <FileText className="w-4 h-4 mr-2 text-[#22337c]" />
+                    <span className="truncate max-w-[200px] text-sm">{file.name}</span>
+                  </div>
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="text-gray-500 hover:text-red-500 p-1 rounded-full"
+                    disabled={uploading}
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Upload progress */}
+        {uploading && (
+          <div className="mt-4">
+            <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-[#3eafdb] transition-all" 
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+            <div className="text-xs text-center mt-1 text-gray-500">
+              Uploading: {uploadProgress}%
+            </div>
+          </div>
+        )}
+
+        {/* Upload button */}
+        {files.length > 0 && !uploading && (
+          <button
+            className="mt-4 bg-[#22337c] text-white py-2 px-4 rounded-full w-full font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleUpload}
+            disabled={files.length === 0 || uploading}
           >
-            {files.length} file(s) selected
-          </p>
-          <ul style={{ maxHeight: "150px", overflowY: "auto" }}>
-            {files.map((file, index) => (
-              <li
-                key={index}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px",
-                  backgroundColor: "white",
-                  marginBottom: "4px",
-                  borderRadius: "4px",
-                  border: "1px solid #e5e7eb",
-                }}
-              >
-                <span style={{ fontWeight: "500", fontSize: "14px" }}>
-                  {file.name} ({(file.size / 1024).toFixed(1)} KB)
-                </span>
-                <button
-                  onClick={() => removeFile(index)}
-                  disabled={uploading}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#6b7280",
-                    fontSize: "14px",
-                  }}
+            Upload {files.length} file{files.length !== 1 ? 's' : ''}
+          </button>
+        )}
+
+        {/* Results */}
+        {uploadResults.length > 0 && (
+          <div className="mt-4">
+            <h3 className="text-sm font-medium mb-2">Upload Results:</h3>
+            <div className="space-y-2">
+              {uploadResults.map((result, index) => (
+                <div
+                  key={index}
+                  className={`p-2 rounded text-sm flex items-start ${
+                    result.success ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"
+                  }`}
                 >
-                  ✕
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Upload button */}
-      <button
-        onClick={handleUpload}
-        disabled={files.length === 0 || uploading}
-        style={{
-          width: "100%",
-          padding: "12px",
-          backgroundColor:
-            files.length === 0 || uploading ? "#d1d5db" : "#3b82f6",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          fontWeight: "500",
-          cursor: files.length === 0 || uploading ? "not-allowed" : "pointer",
-          transition: "background-color 0.2s",
-        }}
-      >
-        {uploading ? "Uploading..." : "Upload Files"}
-      </button>
-
-      {/* Results */}
-      {uploadResults.length > 0 && (
-        <div
-          style={{
-            marginTop: "16px",
-            backgroundColor: "#f3f4f6",
-            borderRadius: "8px",
-            padding: "12px",
-          }}
-        >
-          <h4
-            style={{ fontSize: "14px", fontWeight: "500", marginBottom: "8px" }}
-          >
-            Upload Results:
-          </h4>
-          <ul style={{ maxHeight: "150px", overflowY: "auto" }}>
-            {uploadResults.map((result, index) => (
-              <li
-                key={index}
-                style={{
-                  padding: "8px 12px",
-                  marginBottom: "4px",
-                  borderRadius: "4px",
-                  backgroundColor: result.success
-                    ? "rgba(16, 185, 129, 0.1)"
-                    : "rgba(239, 68, 68, 0.1)",
-                  color: result.success ? "#10b981" : "#ef4444",
-                  borderLeft: `3px solid ${
-                    result.success ? "#10b981" : "#ef4444"
-                  }`,
-                  fontSize: "14px",
-                }}
-              >
-                <strong>{result.filename}:</strong> {result.message}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  <span className="truncate">{result.filename}: {result.message}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-  );
+  )
 }

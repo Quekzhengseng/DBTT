@@ -10,3 +10,11 @@ services:
     env_file:
       - .env
     restart: unless-stopped
+    environment:
+      - GUNICORN_TIMEOUT=120
+      - GUNICORN_WORKERS=1
+    # Add memory limit
+    deploy:
+      resources:
+        limits:
+          memory: 512M

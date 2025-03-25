@@ -50,9 +50,12 @@ def send_message():
         except Exception as e:
             print(f"Error storing conversation: {e}")
         
+        # Return the complete response including image and additional_images if present
         return jsonify({
             'message': response['message'],
-            'sources': response.get('sources', [])
+            'sources': response.get('sources', []),
+            'image': response.get('image'),
+            'additional_images': response.get('additional_images')
         })
     except Exception as e:
         print(f"Error in chat processing: {e}")
