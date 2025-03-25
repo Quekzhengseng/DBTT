@@ -604,8 +604,8 @@ export default function SearchResults() {
             <Image
               src="/woodlands-transport-logo.png"
               alt="Woodlands Transport"
-              width={100}
-              height={40}
+              width={50}
+              height={50}
             />
           </div>
         </div>
