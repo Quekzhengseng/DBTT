@@ -541,7 +541,7 @@ export default function Home() {
 
         {/* Packages Section */}
         <section className={styles.packagesSection}>
-          <h2 className={styles.sectionTitle}>WTS Packages</h2>
+          <h2 className={styles.sectionTitle}>Recommended For You</h2>
           <div className={styles.packageSlider}>
             <button className={styles.sliderButton + " " + styles.prevButton}>
               ‹
@@ -699,7 +699,7 @@ export default function Home() {
                       />
                       <span>John</span>
                     </div>
-                    <button className={styles.likeButton}>❤</button>
+                    <button className={styles.likeButton}>123 ❤</button>
                   </div>
                 </div>
                 <Link href="/blog/tokyo-japan">
@@ -727,7 +727,7 @@ export default function Home() {
                         />
                         <span>Mary</span>
                       </div>
-                      <button className={styles.likeButton}>❤</button>
+                      <button className={styles.likeButton}>53 ❤</button>
                     </div>
                   </div>
                 </Link>

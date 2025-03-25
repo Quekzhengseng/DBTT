@@ -135,9 +135,15 @@
   flex: 2;
 }
 
-.recommendationsContainer,
-.addedActivitiesContainer {
+.recommendationsContainer {
   background-color: #1e56a0;
+  color: white;
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.addedActivitiesContainer {
+  background-color: rgb(218, 180, 27);
   color: white;
   border-radius: 10px;
   padding: 1rem;
@@ -195,10 +201,8 @@
 .flightDetails {
   display: flex;
   align-items: center;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  padding: 1rem;
-  background-color: #f9f9f9;
+  flex: 1;
+  padding: 8px 0;
 }
 
 .flightTime {
@@ -954,4 +958,169 @@
 
 .paymentSummaryButton:hover {
   background-color: #1765cc;
+}
+
+.tripConfirmedStatus {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+  color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.tripConfirmedStatus .checkIcon {
+  margin-right: 4px;
+  width: 16px;
+  height: 16px;
+}
+
+/* Make sure the title can accommodate the status badge */
+.tripTitle h1 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Add these styles to your trip.module.css file */
+
+.ratingStars {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.starIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+}
+
+.ratingValue {
+  margin-left: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #666;
+}
+
+/* Update activity styling to accommodate ratings */
+.activity {
+  position: relative;
+  display: flex;
+  background-color: white;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #eaeaea;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  cursor: grab;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.activity:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.activityContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.activityDescription {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 4px 0;
+}
+
+.airlineLogo {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.logoImage {
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+/* Add this to your trip.module.css file */
+
+.resetBtn {
+  padding: 8px 16px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.resetBtn:hover {
+  background-color: #d32f2f;
+}
+
+/* Add these styles to your trip.module.css file */
+
+.dayNotes {
+  margin: 10px 0 15px;
+  padding: 12px 15px;
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  border-left: 3px solid #1e56a0;
+}
+
+.dayNotesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.dayNotesTitle {
+  margin: 0;
+  color: #1e56a0;
+  font-size: 0.9rem;
+}
+
+.dayNotesContent {
+  color: #333; /* Black text instead of default grey */
+  font-style: normal; /* Removes italic styling */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 20px; /* Ensures there's always space even if empty */
+}
+
+.editNotesButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.editNotesButton:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.editNotesButton svg {
+  width: 14px;
+  height: 14px;
 }

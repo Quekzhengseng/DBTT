@@ -208,6 +208,8 @@ function PaymentContent() {
     }));
   };
 
+  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsProcessing(true);

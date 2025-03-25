@@ -8,7 +8,7 @@ import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import styles from "./trip.module.css";
 
-// Drag and Drop Components
+// Updated DraggableActivity component with star ratings
 const DraggableActivity = ({
   activity,
   index,
@@ -29,17 +29,87 @@ const DraggableActivity = ({
         image: activity.image,
         price: activity.price,
         duration: activity.duration,
+        rating: activity.rating, // Make sure to include rating in the dragged item
         origin,
         day,
       }),
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
       }),
-      // Ensure the item identity is updated when props change
       options: { dropEffect: "move" },
     }),
     [activity, origin, day]
-  ); // Add dependencies to ensure useDrag recreates when these change
+  );
+
+  // Function to render stars based on rating
+  const renderStars = (rating) => {
+    // Only render stars if rating exists
+    if (!rating) return null;
+
+    const fullStars = Math.floor(rating);
+    const halfStar = rating % 1 >= 0.5;
+    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+    return (
+      <div className={styles.ratingStars}>
+        {/* Full stars */}
+        {[...Array(fullStars)].map((_, i) => (
+          <svg
+            key={`full-${i}`}
+            className={styles.starIcon}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="#FFC107"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
+          </svg>
+        ))}
+
+        {/* Half star */}
+        {halfStar && (
+          <svg
+            className={styles.starIcon}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="#FFC107"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z"
+              fill="url(#half-star)"
+            />
+            <defs>
+              <linearGradient id="half-star" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="50%" stopColor="#FFC107" />
+                <stop offset="50%" stopColor="#e0e0e0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        )}
+
+        {/* Empty stars */}
+        {[...Array(emptyStars)].map((_, i) => (
+          <svg
+            key={`empty-${i}`}
+            className={styles.starIcon}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="#e0e0e0"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 17.27L18.18 21L16.54 13.97L22 9.24L14.81 8.63L12 2L9.19 8.63L2 9.24L7.46 13.97L5.82 21L12 17.27Z" />
+          </svg>
+        ))}
+
+        {/* Display numeric rating */}
+        <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+      </div>
+    );
+  };
 
   return (
     <div
@@ -66,6 +136,11 @@ const DraggableActivity = ({
             {activity.description}
           </div>
         )}
+
+        {/* Add star rating display */}
+        {(origin === "recommendations" || origin === "itinerary") &&
+          activity.rating &&
+          renderStars(activity.rating)}
 
         {/* Show checkout button for itinerary paid activities */}
         {origin === "itinerary" && activity.price > 0 && (
@@ -164,14 +239,35 @@ const DroppableDay = ({
         </h3>
         <button className={styles.addActivity}>Add Activity</button>
       </div>
+
       <div className={styles.dayNotes}>
-        {day === 1 && "Check in around 3pm by Lawson Red."}
-        {day === 2 &&
-          "Visit Tokyo Imperial Palace first. Take shopping at Shibuya at night."}
-        {day === 3 && "Leave comfort zone to explore for dinner."}
-        {day === 4 && ""}
-        {day === 5 && ""}
-        {day === 6 && ""}
+        <div className={styles.dayNotesHeader}>
+          <h4 className={styles.dayNotesTitle}>Notes</h4>
+          <button className={styles.editNotesButton}>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+            Edit
+          </button>
+        </div>
+        <div className={styles.dayNotesContent}>
+          {day === 1 && "Check in around 3pm by Lawson Red."}
+          {day === 2 &&
+            "Visit Tokyo Imperial Palace first. Take shopping at Shibuya at night."}
+          {day === 3 && "Leave comfort zone to explore for dinner."}
+          {day === 4 && ""}
+          {day === 5 && ""}
+          {day === 6 && ""}
+        </div>
       </div>
       <div className={styles.activitiesSection} ref={drop}>
         <h4>Activities</h4>
@@ -253,6 +349,9 @@ const TripItineraryPage = () => {
   const params = useParams();
   const tripId = params.id;
 
+  // Add a state for overall trip confirmation status
+  const [isTripConfirmed, setIsTripConfirmed] = useState(false);
+
   // State for payment modal
   const [paymentModalOpen, setPaymentModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -264,7 +363,7 @@ const TripItineraryPage = () => {
   // State for trip details
   const [tripDetails, setTripDetails] = useState({
     id: tripId,
-    title: "My Japan Trip",
+    title: "Relaxation Trip",
     destination: "Tokyo, Japan",
     dates: "23 Feb - 28 Feb",
     totalDays: 6,
@@ -313,6 +412,62 @@ const TripItineraryPage = () => {
     },
   });
 
+  const handleResetAllPurchases = () => {
+    // Show a confirmation dialog
+    if (
+      window.confirm(
+        "Are you sure you want to reset all purchases? This will mark all items as 'pending' again."
+      )
+    ) {
+      // 1. Reset flights to pending
+      const resetFlights = tripDetails.flights.map((flight) => ({
+        ...flight,
+        status: "pending",
+      }));
+
+      // 2. Reset hotel to pending
+      const resetHotel = {
+        ...tripDetails.hotel,
+        status: "pending",
+      };
+
+      // 3. Update trip details with reset values
+      const updatedTripDetails = {
+        ...tripDetails,
+        flights: resetFlights,
+        hotel: resetHotel,
+      };
+
+      // 4. Save to state and localStorage
+      setTripDetails(updatedTripDetails);
+      localStorage.setItem(
+        `trip_${tripId}`,
+        JSON.stringify(updatedTripDetails)
+      );
+
+      // 5. Reset all activities with prices to pending
+      const resetActivities = {};
+      Object.keys(dayActivities).forEach((day) => {
+        resetActivities[day] = dayActivities[day].map((activity) => {
+          if (activity.price > 0) {
+            return { ...activity, status: "pending" };
+          }
+          return activity;
+        });
+      });
+
+      // 6. Save activities to state and localStorage
+      setDayActivities(resetActivities);
+      localStorage.setItem(
+        `activities_${tripId}`,
+        JSON.stringify(resetActivities)
+      );
+
+      // 7. Reset trip confirmation status (although this will be handled by the useEffect)
+      setIsTripConfirmed(false);
+    }
+  };
+
   // State for day activities
   const [dayActivities, setDayActivities] = useState({
     1: [
@@ -322,6 +477,7 @@ const TripItineraryPage = () => {
         time: "15:00 - 16:00",
         description: "Check in and rest after flight",
         status: "confirmed",
+        rating: 4.2,
       },
     ],
     2: [
@@ -333,6 +489,7 @@ const TripItineraryPage = () => {
         image: "/tokyo-palace.jpg",
         price: 0,
         status: "confirmed",
+        rating: 4,
       },
       {
         id: "existing-3",
@@ -342,57 +499,66 @@ const TripItineraryPage = () => {
         image: "/shibuya.jpg",
         price: 0,
         status: "confirmed",
+        rating: 4.7,
       },
     ],
     3: [
       {
         id: "existing-4",
-        title: "1. Meiji Jingu Tour",
+        title: "Meiji Jingu Tour",
         time: "09:00 - 13:30",
         description: "Dedicated to Emperor Meiji and Empress Shoken",
         image: "/meiji-jingu.jpg",
         duration: "4.5 hours",
         price: 100,
         status: "pending",
+        rating: 3.8,
       },
       {
         id: "existing-5",
-        title: "2. Shibuya Sky",
+        title: "Shibuya Sky",
         time: "15:00 - 17:30",
         description: "Observation deck with an excellent view of Tokyo",
         image: "/shibuya-sky.jpg",
         duration: "2.5 hours",
         price: 100,
         status: "pending",
+        rating: 5,
       },
     ],
     4: [
       {
         id: "existing-6",
-        title: "1. Tokyo Disneyland",
+        title: "Tokyo Disneyland",
         time: "09:00 - 20:00",
         description: 'Enjoy the "happiest place on Earth" for a full day',
         image: "/tokyo-disneyland.jpg",
         duration: "11 hours",
         price: 110,
         status: "pending",
+        rating: 4.5,
       },
     ],
     5: [],
     6: [],
   });
 
-  // Calculate total pending payments whenever trip details or activities change
   useEffect(() => {
     // Calculate pending amounts and count
     let total = 0;
     let count = 0;
 
-    // Check flights
+    // Required bookings that need confirmation
+    let flightsConfirmed = true;
+    let hotelConfirmed = true;
+    let paidActivitiesConfirmed = true;
+
+    // Check flights - ALL flights must be confirmed
     tripDetails.flights.forEach((flight) => {
       if (flight.status === "pending") {
         total += flight.price;
         count++;
+        flightsConfirmed = false;
       }
     });
 
@@ -400,20 +566,37 @@ const TripItineraryPage = () => {
     if (tripDetails.hotel.status === "pending") {
       total += tripDetails.hotel.price;
       count++;
+      hotelConfirmed = false;
     }
 
-    // Check activities across all days
+    // Check activities across all days (only paid activities need confirmation)
+    let hasPaidActivities = false;
+
     Object.values(dayActivities).forEach((activities) => {
       activities.forEach((activity) => {
-        if (activity.status === "pending" && activity.price > 0) {
-          total += activity.price;
-          count++;
+        if (activity.price > 0) {
+          hasPaidActivities = true;
+          if (activity.status === "pending") {
+            total += activity.price;
+            count++;
+            paidActivitiesConfirmed = false;
+          }
         }
       });
     });
 
+    // If there are no paid activities, consider activities as confirmed
+    if (!hasPaidActivities) {
+      paidActivitiesConfirmed = true;
+    }
+
     setTotalPendingAmount(total);
     setPendingItemsCount(count);
+
+    // Only set trip as confirmed if ALL required bookings are confirmed
+    setIsTripConfirmed(
+      flightsConfirmed && hotelConfirmed && paidActivitiesConfirmed
+    );
   }, [tripDetails, dayActivities]);
 
   // Load saved data from localStorage
@@ -748,13 +931,43 @@ const TripItineraryPage = () => {
         {/* Trip Info Bar */}
         <div className={styles.tripInfo}>
           <div className={styles.tripTitle}>
-            <h1>{tripDetails.title}</h1>
+            <h1>
+              Tokyo 2025
+              {isTripConfirmed && (
+                <span className={styles.tripConfirmedStatus}>
+                  <svg
+                    className={styles.checkIcon}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="12" r="10" fill="#4CAF50" />
+                    <path
+                      d="M8 12L11 15L16 9"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Confirmed
+                </span>
+              )}
+            </h1>
             <div className={styles.tripTags}>
               <span className={styles.tag}>Free & Easy</span>
               <span className={styles.tag}>Family</span>
             </div>
           </div>
           <div className={styles.tripActions}>
+            <button
+              className={styles.resetBtn}
+              onClick={handleResetAllPurchases}
+            >
+              Reset Purchases
+            </button>
             <button className={styles.downloadBtn}>Download PDF</button>
             <button className={styles.shareBtn}>Share Trip</button>
           </div>
@@ -814,6 +1027,15 @@ const TripItineraryPage = () => {
                 <div className={styles.flight}>
                   <div className={styles.flightDate}>23 Feb 2025</div>
                   <div className={styles.flightDetails}>
+                    <div className={styles.airlineLogo}>
+                      <Image
+                        src="/singapore-airlines-logo.png"
+                        alt="Singapore Airlines"
+                        width={40}
+                        height={40}
+                        className={styles.logoImage}
+                      />
+                    </div>
                     <div className={styles.flightTime}>
                       <div className={styles.time}>12:30</div>
                       <div className={styles.airport}>SIN T1</div>
@@ -871,6 +1093,15 @@ const TripItineraryPage = () => {
                 <div className={styles.flight}>
                   <div className={styles.flightDate}>28 Feb 2025</div>
                   <div className={styles.flightDetails}>
+                    <div className={styles.airlineLogo}>
+                      <Image
+                        src="/singapore-airlines-logo.png"
+                        alt="Singapore Airlines"
+                        width={40}
+                        height={40}
+                        className={styles.logoImage}
+                      />
+                    </div>
                     <div className={styles.flightTime}>
                       <div className={styles.time}>10:00</div>
                       <div className={styles.airport}>NRT T1</div>
@@ -1044,8 +1275,8 @@ const TripItineraryPage = () => {
 
           {/* Right Section - Recommendations */}
           <div className={styles.recommendationsSection}>
-            <div className={styles.sidebarContent}>
-              {/* Recommendations */}
+            {/* WTS Recommendations Container */}
+            <div className={styles.sectionContainer}>
               <div className={styles.recommendationsContainer}>
                 <div className={styles.recommendationsHeader}>
                   <h2>WTS Recommendations</h2>
@@ -1071,8 +1302,10 @@ const TripItineraryPage = () => {
                   ))}
                 </div>
               </div>
+            </div>
 
-              {/* Added Activities */}
+            {/* Added Activities - As a separate container */}
+            <div className={styles.sectionContainer}>
               <div className={styles.addedActivitiesContainer}>
                 <div className={styles.addedActivitiesHeader}>
                   <h2>Added Activities</h2>
@@ -1091,6 +1324,7 @@ const TripItineraryPage = () => {
                 </div>
               </div>
             </div>
+
             {/* Payment Summary Button */}
             {pendingItemsCount > 0 && (
               <div className={styles.paymentSummarySection}>
