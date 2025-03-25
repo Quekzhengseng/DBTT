@@ -540,8 +540,9 @@ export default function Home() {
         </section>
 
         {/* Packages Section */}
+        <h2 className={styles.sectionTitle}>WTS Recommendations</h2>
         <section className={styles.packagesSection}>
-          <h2 className={styles.sectionTitle}>WTS Packages</h2>
+
           <div className={styles.packageSlider}>
             <button className={styles.sliderButton + " " + styles.prevButton}>
               ‹
@@ -620,10 +621,20 @@ export default function Home() {
         </section>
 
         {/* Two Column Section */}
-        <div className={styles.twoColumnSection}>
+        {/* <div className={styles.twoColumnSection}> */}
+        <div className={styles.twoColumnContainer}>
+        <div className={styles.column}>
+        <h2 className={styles.sectionTitle}>MY TRIPS</h2>
           {/* My Trips Section */}
           <section className={styles.myTripsSection}>
-            <h2 className={styles.sectionTitle}>MY TRIPS</h2>
+
+
+            <div className={styles.myTripsSubnav}>
+              <button style={{ opacity: 1, borderBottom: "2px solid white" }}>Planning</button>
+              <button>Upcoming</button>
+              <button>Completed</button>
+            </div>
+
             <div className={styles.tripsList}>
               {savedTrips.map((trip) => (
                 <div key={trip.id} className={styles.tripCardContainer}>
@@ -668,11 +679,16 @@ export default function Home() {
                 </div>
               ))}
             </div>
+
           </section>
+          </div>
 
           {/* Blog Posts Section */}
+
+          <div className={styles.column}>
+          <h2 className={styles.sectionTitle}>Blog Posts</h2>
           <section className={styles.blogSection}>
-            <h2 className={styles.sectionTitle}>Blog Posts</h2>
+
             <div className={styles.blogSlider}>
               <div className={styles.blogPosts}>
                 <div className={styles.blogPost}>
@@ -699,7 +715,7 @@ export default function Home() {
                       />
                       <span>John</span>
                     </div>
-                    <button className={styles.likeButton}>❤</button>
+                    <button className={styles.likeButton}>123❤</button>
                   </div>
                 </div>
                 <Link href="/blog/tokyo-japan">
@@ -727,7 +743,7 @@ export default function Home() {
                         />
                         <span>Mary</span>
                       </div>
-                      <button className={styles.likeButton}>❤</button>
+                      <button className={styles.likeButton}>111❤</button>
                     </div>
                   </div>
                 </Link>
@@ -737,6 +753,7 @@ export default function Home() {
               </button>
             </div>
           </section>
+          </div>
         </div>
       </main>
 
