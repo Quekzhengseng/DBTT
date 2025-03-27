@@ -52,7 +52,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "15 Feb - 19 Feb",
         price: 1099,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing2.jpg",
       },
       {
         id: 3,
@@ -60,7 +60,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Feb - 25 Feb",
         price: 1299,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing3.jpg",
       },
       {
         id: 4,
@@ -68,7 +68,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "22 Feb - 28 Feb",
         price: 1499,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing4.jpg",
       },
       {
         id: 5,
@@ -76,7 +76,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "1 Mar - 4 Mar",
         price: 899,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing5.jpg",
       },
       {
         id: 6,
@@ -84,7 +84,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "5 Mar - 9 Mar",
         price: 1099,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing6.jpg",
       },
       {
         id: 7,
@@ -92,7 +92,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "10 Mar - 15 Mar",
         price: 1299,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing7.jpg",
       },
       {
         id: 8,
@@ -100,7 +100,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Mar - 21 Mar",
         price: 1499,
-        image: "/tokyo-listing1.jpg",
+        image: "/tokyo-listing8.jpg",
       },
     ],
     themes: [
@@ -118,7 +118,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "18 Feb - 23 Feb",
         price: 1199,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme2.jpg",
       },
       {
         id: 3,
@@ -126,7 +126,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "5 Mar - 8 Mar",
         price: 999,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme3.jpg",
       },
       {
         id: 4,
@@ -134,7 +134,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "12 Mar - 16 Mar",
         price: 1099,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme4.jpg",
       },
       {
         id: 5,
@@ -142,7 +142,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Mar - 25 Mar",
         price: 1299,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme5.jpg",
       },
       {
         id: 6,
@@ -150,7 +150,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Feb - 21 Feb",
         price: 1499,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme6.jpg",
       },
       {
         id: 7,
@@ -158,7 +158,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "22 Feb - 26 Feb",
         price: 1199,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme7.jpg",
       },
       {
         id: 8,
@@ -166,7 +166,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "10 Mar - 13 Mar",
         price: 999,
-        image: "/tokyo-theme1.jpg",
+        image: "/tokyo-theme8.jpg",
       },
     ],
     "free-easy": [
@@ -184,7 +184,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "15 Feb - 19 Feb",
         price: 899,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free2.jpg",
       },
       {
         id: 3,
@@ -192,7 +192,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "20 Feb - 25 Feb",
         price: 999,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free3.jpg",
       },
       {
         id: 4,
@@ -200,7 +200,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "22 Feb - 28 Feb",
         price: 1099,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free4.jpg",
       },
       {
         id: 5,
@@ -208,7 +208,7 @@ const SearchContent = () => {
         subTitle: "4D3N",
         dates: "1 Mar - 4 Mar",
         price: 799,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free5.jpg",
       },
       {
         id: 6,
@@ -216,7 +216,7 @@ const SearchContent = () => {
         subTitle: "5D4N",
         dates: "5 Mar - 9 Mar",
         price: 899,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free6.jpg",
       },
       {
         id: 7,
@@ -224,7 +224,7 @@ const SearchContent = () => {
         subTitle: "6D5N",
         dates: "10 Mar - 15 Mar",
         price: 999,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free7.jpg",
       },
       {
         id: 8,
@@ -232,7 +232,7 @@ const SearchContent = () => {
         subTitle: "7D6N",
         dates: "15 Mar - 21 Mar",
         price: 1099,
-        image: "/tokyo-free1.jpg",
+        image: "/tokyo-free8.jpg",
       },
     ],
     activities: [
@@ -250,7 +250,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 149,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity2.jpg",
       },
       {
         id: 3,
@@ -258,7 +258,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 129,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity3.jpg",
       },
       {
         id: 4,
@@ -266,7 +266,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Available Daily",
         price: 79,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity4.jpg",
       },
       {
         id: 5,
@@ -274,7 +274,7 @@ const SearchContent = () => {
         subTitle: "1 Day",
         dates: "Available Daily",
         price: 89,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity5.jpg",
       },
       {
         id: 6,
@@ -282,7 +282,7 @@ const SearchContent = () => {
         subTitle: "Evening",
         dates: "Available Daily",
         price: 119,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity6.jpg",
       },
       {
         id: 7,
@@ -290,7 +290,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Available Daily",
         price: 99,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity7.jpg",
       },
       {
         id: 8,
@@ -298,7 +298,7 @@ const SearchContent = () => {
         subTitle: "1/2 Day",
         dates: "Selected Days",
         price: 109,
-        image: "/tokyo-activity1.jpg",
+        image: "/tokyo-activity8.jpg",
       },
     ],
   };
@@ -355,6 +355,7 @@ const SearchContent = () => {
         ...tripDetails.hotel,
         nights: listing.nights || "5 Nights",
       },
+      status: "planning",
     });
 
     setIsModalOpen(true);
@@ -526,7 +527,7 @@ const SearchContent = () => {
 // Main search page component with suspense boundary
 export default function SearchResults() {
   return (
-    <div className={styles.container}>
+    <div>
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
@@ -563,72 +564,73 @@ export default function SearchResults() {
           />
         </div>
       </header>
-
-      {/* Hero Banner */}
-      <div className={styles.heroBanner}>
-        <Image
-          src="/japan-banner.jpg"
-          alt="Japan Mountains"
-          width={1200}
-          height={300}
-          className={styles.bannerImage}
-        />
-        <div className={styles.bannerOverlay}>
-          <h1 className={styles.bannerTitle}>Explore with WTS</h1>
-        </div>
-      </div>
-
-      {/* Wrap the component using useSearchParams in Suspense boundary */}
-      <Suspense
-        fallback={
-          <div className={styles.loadingContainer}>
-            <div className={styles.spinner}></div>
-            <p>Loading search results...</p>
-          </div>
-        }
-      >
-        <SearchContent />
-      </Suspense>
-
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.footerInfo}>
-          <p>WTS Travel & Tours Pte Ltd</p>
-          <p>旅行社牌照号码 Travel Agent License Number: TA02307</p>
-          <p>Copyright 2025©</p>
-          <p>All rights reserved.</p>
-        </div>
-        <div className={styles.footerPartner}>
-          <p>A subsidiary of:</p>
-          <div className={styles.transportLogo}>
-            <Image
-              src="/woodlands-transport-logo.png"
-              alt="Woodlands Transport"
-              width={50}
-              height={50}
-            />
+      <div className={styles.container}>
+        {/* Hero Banner */}
+        <div className={styles.heroBanner}>
+          <Image
+            src="/japan-banner.jpg"
+            alt="Japan Mountains"
+            width={1200}
+            height={300}
+            className={styles.bannerImage}
+          />
+          <div className={styles.bannerOverlay}>
+            <h1 className={styles.bannerTitle}>Explore with WTS</h1>
           </div>
         </div>
-        <div className={styles.chatButton}>
-          <button className={styles.chatIcon}>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.8214 2.48697 15.5291 3.33782 17L2.5 21.5L7 20.6622C8.47087 21.513 10.1786 22 12 22Z"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+
+        {/* Wrap the component using useSearchParams in Suspense boundary */}
+        <Suspense
+          fallback={
+            <div className={styles.loadingContainer}>
+              <div className={styles.spinner}></div>
+              <p>Loading search results...</p>
+            </div>
+          }
+        >
+          <SearchContent />
+        </Suspense>
+
+        {/* Footer */}
+        <footer className={styles.footer}>
+          <div className={styles.footerInfo}>
+            <p>WTS Travel & Tours Pte Ltd</p>
+            <p>旅行社牌照号码 Travel Agent License Number: TA02307</p>
+            <p>Copyright 2025©</p>
+            <p>All rights reserved.</p>
+          </div>
+          <div className={styles.footerPartner}>
+            <p>A subsidiary of:</p>
+            <div className={styles.transportLogo}>
+              <Image
+                src="/woodlands-transport-logo.png"
+                alt="Woodlands Transport"
+                width={50}
+                height={50}
               />
-            </svg>
-          </button>
-        </div>
-      </footer>
+            </div>
+          </div>
+          <div className={styles.chatButton}>
+            <button className={styles.chatIcon}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.8214 2.48697 15.5291 3.33782 17L2.5 21.5L7 20.6622C8.47087 21.513 10.1786 22 12 22Z"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

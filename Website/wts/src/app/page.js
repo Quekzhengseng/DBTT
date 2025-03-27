@@ -41,6 +41,8 @@ export default function Home() {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
+  const [activeFilter, setActiveFilter] = useState("all");
+
   // Date picker states
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -221,12 +223,6 @@ export default function Home() {
   const [savedTrips, setSavedTrips] = useState([
     {
       id: 1,
-      destination: "New York City",
-      dates: "5 June - 26 June",
-      image: "/nyc-trip.jpg",
-    },
-    {
-      id: 2,
       destination: "Bangkok",
       dates: "5 November - 15 November",
       image: "/bangkok-trip.jpg",
@@ -237,10 +233,54 @@ export default function Home() {
   useEffect(() => {
     try {
       const savedTripsStr = localStorage.getItem("savedTrips");
+      console.log(savedTripsStr);
       if (savedTripsStr) {
         const loadedTrips = JSON.parse(savedTripsStr);
         if (Array.isArray(loadedTrips) && loadedTrips.length > 0) {
-          setSavedTrips(loadedTrips);
+          // Add status to trips if not present
+          const tripsWithStatus = loadedTrips.map((trip) => {
+            if (!trip.status) {
+              // Simple logic to determine status based on dates
+              const now = new Date();
+
+              // Extract dates from string format "5 November - 15 November"
+              const datesParts = trip.dates.split(" - ");
+              const startDateStr = datesParts[0];
+              const endDateStr = datesParts[1] || startDateStr;
+
+              // Simple parsing - assumes format like "5 November"
+              const startDateParts = startDateStr.split(" ");
+              const endDateParts = endDateStr.split(" ");
+
+              const startDate = new Date(
+                `${startDateParts[1]} ${
+                  startDateParts[0]
+                }, ${new Date().getFullYear()}`
+              );
+              const endDate = new Date(
+                `${endDateParts[1]} ${
+                  endDateParts[0]
+                }, ${new Date().getFullYear()}`
+              );
+
+              // Determine status
+              let status = "planning";
+              if (endDate < now) {
+                status = "completed";
+              } else if (startDate <= now && endDate >= now) {
+                status = "upcoming";
+              }
+
+              return { ...trip, status };
+            }
+            return trip;
+          });
+
+          setSavedTrips(tripsWithStatus);
+
+          // Save back to localStorage with status
+          localStorage.setItem("savedTrips", JSON.stringify(tripsWithStatus));
+          console.log(localStorage);
         }
       }
     } catch (error) {
@@ -248,7 +288,7 @@ export default function Home() {
     }
   }, []);
   return (
-    <div className={styles.container}>
+    <div>
       {/* Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
@@ -307,478 +347,598 @@ export default function Home() {
           />
         </div>
       </header>
+      <section className={styles.planTrip}>
+        <h1 className={styles.planTripTitle}>Plan a trip!</h1>
+        <div className={styles.planTripForm}>
+          <div className={styles.formGroup}>
+            <label htmlFor="destination">Where to?</label>
+            <div className={styles.autocompleteContainer} ref={dropdownRef}>
+              <input
+                type="text"
+                id="destination"
+                placeholder="e.g. Bali, Vietnam, Korea"
+                className={styles.formInput}
+                onChange={handleDestinationInput}
+                onFocus={() => setShowDropdown(true)}
+                value={destinationInput}
+              />
+              {showDropdown && filteredDestinations.length > 0 && (
+                <ul className={styles.dropdown}>
+                  {filteredDestinations.map((dest, index) => (
+                    <li
+                      key={index}
+                      className={styles.dropdownItem}
+                      onClick={() => selectDestination(dest)}
+                    >
+                      <span className={styles.destinationCity}>
+                        {dest.city}
+                      </span>
+                      <span className={styles.destinationCountry}>
+                        {dest.country}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="dates">Dates</label>
+            <div className={styles.dateInputs}>
+              <div className={styles.datePickerContainer}>
+                <div
+                  className={styles.dateInput}
+                  onClick={() => setShowStartCalendar(!showStartCalendar)}
+                >
+                  <svg
+                    className={styles.calendarIcon}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      x="3"
+                      y="4"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      ry="2"
+                    ></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Start Date"
+                    value={startDate ? formatDate(startDate) : ""}
+                    readOnly
+                  />
+                </div>
+                {showStartCalendar && (
+                  <div className={styles.calendar} ref={startCalendarRef}>
+                    <div className={styles.calendarHeader}>
+                      <button onClick={() => changeMonth(-1)}>&lt;</button>
+                      <span>
+                        {monthNames[currentMonth]} {currentYear}
+                      </span>
+                      <button onClick={() => changeMonth(1)}>&gt;</button>
+                    </div>
+                    <div className={styles.weekdays}>
+                      {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                        <div key={day} className={styles.weekday}>
+                          {day}
+                        </div>
+                      ))}
+                    </div>
+                    <div className={styles.days}>
+                      {generateCalendarDays().map((day, index) => (
+                        <div
+                          key={index}
+                          className={`${styles.day} ${
+                            day.currentMonth ? "" : styles.otherMonth
+                          } ${
+                            day.date.toDateString() ===
+                            new Date().toDateString()
+                              ? styles.today
+                              : ""
+                          } ${
+                            startDate &&
+                            day.date.toDateString() === startDate.toDateString()
+                              ? styles.selected
+                              : ""
+                          } ${
+                            endDate &&
+                            day.date > startDate &&
+                            day.date < endDate
+                              ? styles.inRange
+                              : ""
+                          }`}
+                          onClick={() => selectStartDate(day.date)}
+                        >
+                          {day.date.getDate()}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
 
-      {/* Main Content */}
-      <main className={styles.main}>
-        <section className={styles.planTrip}>
-          <h1 className={styles.planTripTitle}>Plan a trip!</h1>
-          <div className={styles.planTripForm}>
-            <div className={styles.formGroup}>
-              <label htmlFor="destination">Where to?</label>
-              <div className={styles.autocompleteContainer} ref={dropdownRef}>
-                <input
-                  type="text"
-                  id="destination"
-                  placeholder="e.g. Bali, Vietnam, Korea"
-                  className={styles.formInput}
-                  onChange={handleDestinationInput}
-                  onFocus={() => setShowDropdown(true)}
-                  value={destinationInput}
-                />
-                {showDropdown && filteredDestinations.length > 0 && (
-                  <ul className={styles.dropdown}>
-                    {filteredDestinations.map((dest, index) => (
-                      <li
-                        key={index}
-                        className={styles.dropdownItem}
-                        onClick={() => selectDestination(dest)}
-                      >
-                        <span className={styles.destinationCity}>
-                          {dest.city}
-                        </span>
-                        <span className={styles.destinationCountry}>
-                          {dest.country}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
+              <div className={styles.datePickerContainer}>
+                <div
+                  className={styles.dateInput}
+                  onClick={() => setShowEndCalendar(!showEndCalendar)}
+                >
+                  <svg
+                    className={styles.calendarIcon}
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <rect
+                      x="3"
+                      y="4"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      ry="2"
+                    ></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="End Date"
+                    value={endDate ? formatDate(endDate) : ""}
+                    readOnly
+                  />
+                </div>
+                {showEndCalendar && (
+                  <div className={styles.calendar} ref={endCalendarRef}>
+                    <div className={styles.calendarHeader}>
+                      <button onClick={() => changeMonth(-1)}>&lt;</button>
+                      <span>
+                        {monthNames[currentMonth]} {currentYear}
+                      </span>
+                      <button onClick={() => changeMonth(1)}>&gt;</button>
+                    </div>
+                    <div className={styles.weekdays}>
+                      {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
+                        <div key={day} className={styles.weekday}>
+                          {day}
+                        </div>
+                      ))}
+                    </div>
+                    <div className={styles.days}>
+                      {generateCalendarDays().map((day, index) => (
+                        <div
+                          key={index}
+                          className={`${styles.day} ${
+                            day.currentMonth ? "" : styles.otherMonth
+                          } ${
+                            day.date.toDateString() ===
+                            new Date().toDateString()
+                              ? styles.today
+                              : ""
+                          } ${
+                            endDate &&
+                            day.date.toDateString() === endDate.toDateString()
+                              ? styles.selected
+                              : ""
+                          } ${
+                            startDate &&
+                            endDate &&
+                            day.date > startDate &&
+                            day.date < endDate
+                              ? styles.inRange
+                              : ""
+                          }`}
+                          onClick={() => selectEndDate(day.date)}
+                        >
+                          {day.date.getDate()}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="dates">Dates</label>
-              <div className={styles.dateInputs}>
-                <div className={styles.datePickerContainer}>
-                  <div
-                    className={styles.dateInput}
-                    onClick={() => setShowStartCalendar(!showStartCalendar)}
-                  >
-                    <svg
-                      className={styles.calendarIcon}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="4"
-                        width="18"
-                        height="18"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder="Start Date"
-                      value={startDate ? formatDate(startDate) : ""}
-                      readOnly
-                    />
-                  </div>
-                  {showStartCalendar && (
-                    <div className={styles.calendar} ref={startCalendarRef}>
-                      <div className={styles.calendarHeader}>
-                        <button onClick={() => changeMonth(-1)}>&lt;</button>
-                        <span>
-                          {monthNames[currentMonth]} {currentYear}
-                        </span>
-                        <button onClick={() => changeMonth(1)}>&gt;</button>
-                      </div>
-                      <div className={styles.weekdays}>
-                        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
-                          (day) => (
-                            <div key={day} className={styles.weekday}>
-                              {day}
-                            </div>
-                          )
-                        )}
-                      </div>
-                      <div className={styles.days}>
-                        {generateCalendarDays().map((day, index) => (
-                          <div
-                            key={index}
-                            className={`${styles.day} ${
-                              day.currentMonth ? "" : styles.otherMonth
-                            } ${
-                              day.date.toDateString() ===
-                              new Date().toDateString()
-                                ? styles.today
-                                : ""
-                            } ${
-                              startDate &&
-                              day.date.toDateString() ===
-                                startDate.toDateString()
-                                ? styles.selected
-                                : ""
-                            } ${
-                              endDate &&
-                              day.date > startDate &&
-                              day.date < endDate
-                                ? styles.inRange
-                                : ""
-                            }`}
-                            onClick={() => selectStartDate(day.date)}
-                          >
-                            {day.date.getDate()}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.datePickerContainer}>
-                  <div
-                    className={styles.dateInput}
-                    onClick={() => setShowEndCalendar(!showEndCalendar)}
-                  >
-                    <svg
-                      className={styles.calendarIcon}
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <rect
-                        x="3"
-                        y="4"
-                        width="18"
-                        height="18"
-                        rx="2"
-                        ry="2"
-                      ></rect>
-                      <line x1="16" y1="2" x2="16" y2="6"></line>
-                      <line x1="8" y1="2" x2="8" y2="6"></line>
-                      <line x1="3" y1="10" x2="21" y2="10"></line>
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder="End Date"
-                      value={endDate ? formatDate(endDate) : ""}
-                      readOnly
-                    />
-                  </div>
-                  {showEndCalendar && (
-                    <div className={styles.calendar} ref={endCalendarRef}>
-                      <div className={styles.calendarHeader}>
-                        <button onClick={() => changeMonth(-1)}>&lt;</button>
-                        <span>
-                          {monthNames[currentMonth]} {currentYear}
-                        </span>
-                        <button onClick={() => changeMonth(1)}>&gt;</button>
-                      </div>
-                      <div className={styles.weekdays}>
-                        {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map(
-                          (day) => (
-                            <div key={day} className={styles.weekday}>
-                              {day}
-                            </div>
-                          )
-                        )}
-                      </div>
-                      <div className={styles.days}>
-                        {generateCalendarDays().map((day, index) => (
-                          <div
-                            key={index}
-                            className={`${styles.day} ${
-                              day.currentMonth ? "" : styles.otherMonth
-                            } ${
-                              day.date.toDateString() ===
-                              new Date().toDateString()
-                                ? styles.today
-                                : ""
-                            } ${
-                              endDate &&
-                              day.date.toDateString() === endDate.toDateString()
-                                ? styles.selected
-                                : ""
-                            } ${
-                              startDate &&
-                              endDate &&
-                              day.date > startDate &&
-                              day.date < endDate
-                                ? styles.inRange
-                                : ""
-                            }`}
-                            onClick={() => selectEndDate(day.date)}
-                          >
-                            {day.date.getDate()}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-            <button
-              className={styles.planButton}
-              onClick={handleStartPlanning}
-              disabled={!destinationInput}
-            >
-              {isPlanning ? "Planning..." : "Start planning!"}
-            </button>
           </div>
-
-          {/* Background decorations */}
-          <div className={styles.planeIcon}></div>
-          <div className={styles.dashPath}></div>
-        </section>
-
-        {/* Packages Section */}
-        <section className={styles.packagesSection}>
-          <h2 className={styles.sectionTitle1}>Recommended For You</h2>
-          <div className={styles.packageSlider}>
-            <button className={styles.sliderButton + " " + styles.prevButton}>
-              ‹
-            </button>
-            <div className={styles.packages}>
-              <div className={styles.package}>
-                <Image
-                  src="/bali-package.jpg"
-                  alt="Bali"
-                  width={200}
-                  height={150}
-                  className={styles.packageImage}
-                />
-                <div className={styles.packageInfo}>
-                  <h3>Bali</h3>
-                  <p>Indonesia</p>
-                </div>
-              </div>
-              <div className={styles.package}>
-                <Image
-                  src="/phuket-package.jpg"
-                  alt="Phuket"
-                  width={200}
-                  height={150}
-                  className={styles.packageImage}
-                />
-                <div className={styles.packageInfo}>
-                  <h3>Phuket</h3>
-                  <p>Thailand</p>
-                </div>
-              </div>
-              <div className={styles.package}>
-                <Image
-                  src="/paris-package.jpg"
-                  alt="Paris"
-                  width={200}
-                  height={150}
-                  className={styles.packageImage}
-                />
-                <div className={styles.packageInfo}>
-                  <h3>Paris</h3>
-                  <p>France</p>
-                </div>
-              </div>
-              <div className={styles.package}>
-                <Image
-                  src="/xian-package.jpg"
-                  alt="Xian"
-                  width={200}
-                  height={150}
-                  className={styles.packageImage}
-                />
-                <div className={styles.packageInfo}>
-                  <h3>Xi-An</h3>
-                  <p>China</p>
-                </div>
-              </div>
-              <div className={styles.package}>
-                <Image
-                  src="/korea-package.jpg"
-                  alt="Korea"
-                  width={200}
-                  height={150}
-                  className={styles.packageImage}
-                />
-                <div className={styles.packageInfo}>
-                  <h3>Seoul</h3>
-                  <p>Korea</p>
-                </div>
-              </div>
-            </div>
-            <button className={styles.sliderButton + " " + styles.nextButton}>
-              ›
-            </button>
-          </div>
-        </section>
-
-        {/* Two Column Section */}
-        <div className={styles.twoColumnSection}>
-          {/* My Trips Section */}
-          <section className={styles.myTripsSection}>
-            <h2 className={styles.sectionTitle}>MY TRIPS</h2>
-            <div className={styles.tripsList}>
-              {savedTrips.map((trip) => (
-                <div key={trip.id} className={styles.tripCardContainer}>
-                  <Link
-                    href={`/trip/${trip.id}`}
-                    className={styles.tripCardLink}
-                  >
-                    <div className={styles.tripCard}>
-                      <div className={styles.tripInfo}>
-                        <h3>{trip.destination}</h3>
-                        <p>{trip.dates}</p>
-                      </div>
-                      <Image
-                        src={trip.image}
-                        alt={trip.destination}
-                        width={100}
-                        height={80}
-                        className={styles.tripImage}
-                      />
-                    </div>
-                  </Link>
-                  <button
-                    className={styles.deleteButton}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Filter out the trip with this ID
-                      const updatedTrips = savedTrips.filter(
-                        (t) => t.id !== trip.id
-                      );
-                      // Update state
-                      setSavedTrips(updatedTrips);
-                      // Update localStorage
-                      localStorage.setItem(
-                        "savedTrips",
-                        JSON.stringify(updatedTrips)
-                      );
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Blog Posts Section */}
-          <section className={styles.blogSection}>
-            <h2 className={styles.sectionTitle}>Blog Posts</h2>
-            <div className={styles.blogSlider}>
-              <div className={styles.blogPosts}>
-                <div className={styles.blogPost}>
-                  <div className={styles.blogImageContainer}>
+          <button
+            className={styles.planButton}
+            onClick={handleStartPlanning}
+            disabled={!destinationInput}
+          >
+            {isPlanning ? "Planning..." : "Start planning!"}
+          </button>
+        </div>
+      </section>
+      <div className={styles.container}>
+        {/* Main Content */}
+        <main className={styles.main}>
+          {/* Packages Section */}
+          <h2 className={styles.sectionTitle}>Recommended For You</h2>
+          <section className={styles.packagesSection}>
+            <div className={styles.packageSlider}>
+              <button className={styles.sliderButton + " " + styles.prevButton}>
+                ‹
+              </button>
+              <div className={styles.packages}>
+                <div className={styles.package}>
+                  <div className={styles.packageImageContainer}>
                     <Image
-                      src="/amsterdam-blog.jpg"
-                      alt="Amsterdam"
+                      src="/meiji-shrine-detail.jpg"
+                      alt="Meiji Shrine"
                       width={200}
                       height={150}
-                      className={styles.blogImage}
+                      className={styles.packageImage}
                     />
-                    <div className={styles.blogOverlay}>
-                      <h3>A city guide to Amsterdam, The Netherlands</h3>
-                    </div>
+                    <div className={styles.packagePrice}>$45</div>
                   </div>
-                  <div className={styles.blogMeta}>
-                    <div className={styles.blogAuthor}>
-                      <Image
-                        src="/author-john.jpg"
-                        alt="John"
-                        width={24}
-                        height={24}
-                        className={styles.authorAvatar}
-                      />
-                      <span>John</span>
+                  <div className={styles.packageInfo}>
+                    <h3>Meiji Shrine</h3>
+                    <p>Tokyo, Japan</p>
+                    <div className={styles.packageRating}>
+                      <div className={styles.stars}>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.halfStar}>★</span>
+                      </div>
+                      <span className={styles.ratingCount}>4.5 (128)</span>
                     </div>
-                    <button className={styles.likeButton}>123 ❤</button>
                   </div>
                 </div>
-                <Link href="/blog/tokyo-japan">
-                  <div className={styles.blogPost}>
-                    <div className={styles.blogImageContainer}>
-                      <Image
-                        src="/Japan-blog.jpg"
-                        alt="Japan-Tokyo"
-                        width={200}
-                        height={150}
-                        className={styles.blogImage}
-                      />
-                      <div className={styles.blogOverlay}>
-                        <h3>7 Day Trip to Tokyo, Japan</h3>
+                <div className={styles.package}>
+                  <div className={styles.packageImageContainer}>
+                    <Image
+                      src="/asakusa-temple.jpg"
+                      alt="Asakusa Temple"
+                      width={200}
+                      height={150}
+                      className={styles.packageImage}
+                    />
+                    <div className={styles.packagePrice}>$30</div>
+                  </div>
+                  <div className={styles.packageInfo}>
+                    <h3>Asakusa Temple</h3>
+                    <p>Tokyo, Japan</p>
+                    <div className={styles.packageRating}>
+                      <div className={styles.stars}>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.emptyStar}>★</span>
                       </div>
-                    </div>
-                    <div className={styles.blogMeta}>
-                      <div className={styles.blogAuthor}>
-                        <Image
-                          src="/author-mary.jpg"
-                          alt="Mary"
-                          width={24}
-                          height={24}
-                          className={styles.authorAvatar}
-                        />
-                        <span>Mary</span>
-                      </div>
-                      <button className={styles.likeButton}>53 ❤</button>
+                      <span className={styles.ratingCount}>4.0 (96)</span>
                     </div>
                   </div>
-                </Link>
+                </div>
+                <div className={styles.package}>
+                  <div className={styles.packageImageContainer}>
+                    <Image
+                      src="/qilong-temple.jpg"
+                      alt="Qilong Temple"
+                      width={200}
+                      height={150}
+                      className={styles.packageImage}
+                    />
+                    <div className={styles.packagePrice}>$55</div>
+                  </div>
+                  <div className={styles.packageInfo}>
+                    <h3>Qilong Temple</h3>
+                    <p>Beijing, China</p>
+                    <div className={styles.packageRating}>
+                      <div className={styles.stars}>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.halfStar}>★</span>
+                      </div>
+                      <span className={styles.ratingCount}>4.7 (84)</span>
+                    </div>
+                  </div>
+                </div>
+                <div className={styles.package}>
+                  <div className={styles.packageImageContainer}>
+                    <Image
+                      src="/meenakshi-temple.jpg"
+                      alt="Meenakshi Temple"
+                      width={200}
+                      height={150}
+                      className={styles.packageImage}
+                    />
+                    <div className={styles.packagePrice}>$65</div>
+                  </div>
+                  <div className={styles.packageInfo}>
+                    <h3>Meenakshi Temple</h3>
+                    <p>Madurai, India</p>
+                    <div className={styles.packageRating}>
+                      <div className={styles.stars}>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                        <span className={styles.filledStar}>★</span>
+                      </div>
+                      <span className={styles.ratingCount}>4.9 (112)</span>
+                    </div>
+                  </div>
+                </div>
               </div>
               <button className={styles.sliderButton + " " + styles.nextButton}>
                 ›
               </button>
             </div>
           </section>
-        </div>
-      </main>
 
-      {/* Footer */}
-      <footer className={styles.footer}>
-        <div className={styles.footerInfo}>
-          <p>WTS Travel & Tours Pte Ltd</p>
-          <p>旅行社牌照号码 Travel Agent License Number: TA02307</p>
-          <p>Copyright 2023©</p>
-          <p>All rights reserved.</p>
-        </div>
-        <div className={styles.footerPartner}>
-          <p>A subsidiary of:</p>
-          <div className={styles.transportLogo}>
-            <Image
-              src="/woodlands-transport-logo.png"
-              alt="Woodlands Transport"
-              width={50}
-              height={50}
-            />
+          {/* Two Column Section */}
+          <div className={styles.twoColumnSection}>
+            {/* My Trips Section */}
+            <section>
+              <h2 className={styles.sectionTitle}>My Trips</h2>
+              <div className={styles.myTripsSection}>
+                {/* Trip filter buttons */}
+                <div className={styles.tripFilters}>
+                  <button
+                    className={`${styles.filterButton} ${
+                      activeFilter === "all" ? styles.activeFilter : ""
+                    }`}
+                    onClick={() => setActiveFilter("all")}
+                  >
+                    All
+                  </button>
+                  <button
+                    className={`${styles.filterButton} ${
+                      activeFilter === "planning" ? styles.activeFilter : ""
+                    }`}
+                    onClick={() => setActiveFilter("planning")}
+                  >
+                    Planning
+                  </button>
+                  <button
+                    className={`${styles.filterButton} ${
+                      activeFilter === "upcoming" ? styles.activeFilter : ""
+                    }`}
+                    onClick={() => setActiveFilter("upcoming")}
+                  >
+                    Upcoming
+                  </button>
+                  <button
+                    className={`${styles.filterButton} ${
+                      activeFilter === "completed" ? styles.activeFilter : ""
+                    }`}
+                    onClick={() => setActiveFilter("completed")}
+                  >
+                    Completed
+                  </button>
+                </div>
+
+                <div className={styles.tripsList}>
+                  {savedTrips
+                    .filter((trip) => {
+                      if (activeFilter === "all") return true;
+                      return trip.status === activeFilter;
+                    })
+                    .map((trip) => (
+                      <div key={trip.id} className={styles.tripCardContainer}>
+                        <Link
+                          href={`/trip/${trip.id}`}
+                          className={styles.tripCardLink}
+                          style={{ textDecoration: "none" }}
+                        >
+                          <div className={styles.tripCard}>
+                            <div className={styles.tripInfo}>
+                              <h3>{trip.destination}</h3>
+                              <p>{trip.dates}</p>
+                              <span
+                                className={`${styles.tripStatus} ${
+                                  styles[trip.status || "planning"]
+                                }`}
+                              >
+                                {(trip.status || "planning")
+                                  .charAt(0)
+                                  .toUpperCase() +
+                                  (trip.status || "planning").slice(1)}
+                              </span>
+                            </div>
+                            <Image
+                              src={trip.image}
+                              alt={trip.destination}
+                              width={100}
+                              height={80}
+                              className={styles.tripImage}
+                            />
+                          </div>
+                        </Link>
+                        <button
+                          className={styles.deleteButton}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            // Filter out the trip with this ID
+                            const updatedTrips = savedTrips.filter(
+                              (t) => t.id !== trip.id
+                            );
+                            // Update state
+                            setSavedTrips(updatedTrips);
+                            // Update localStorage
+                            localStorage.setItem(
+                              "savedTrips",
+                              JSON.stringify(updatedTrips)
+                            );
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                </div>
+
+                {/* Show a message when no trips match the current filter */}
+                {savedTrips.filter((trip) => {
+                  if (activeFilter === "all") return true;
+                  return trip.status === activeFilter;
+                }).length === 0 && (
+                  <div className={styles.noTripsMessage}>
+                    <p>
+                      No {activeFilter !== "all" ? activeFilter : ""} trips
+                      found.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* Community Section */}
+            <section>
+              <h2 className={styles.sectionTitle}>Community</h2>
+              <div className={styles.communitySection}>
+                <div className={styles.blogContainer}>
+                  <div className={styles.blogSlider}>
+                    <div className={styles.blogPosts}>
+                      {/* First blog post */}
+                      <div className={styles.blogPost}>
+                        <div className={styles.blogImageContainer}>
+                          <Image
+                            src="/amsterdam-blog.jpg"
+                            alt="Amsterdam"
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className={styles.blogImage}
+                            priority
+                          />
+                          <div className={styles.blogOverlay}>
+                            <h3>A city guide to Amsterdam, The Netherlands</h3>
+                          </div>
+                        </div>
+                        <div className={styles.blogMeta}>
+                          <div className={styles.blogAuthor}>
+                            <Image
+                              src="/author-john.jpg"
+                              alt="John"
+                              width={24}
+                              height={24}
+                              className={styles.authorAvatar}
+                            />
+                            <span>John</span>
+                          </div>
+                          <div className={styles.likeButton}>
+                            <span>123</span> ❤
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Second blog post */}
+                      <Link
+                        href="/blog/tokyo-japan"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <div className={styles.blogPost}>
+                          <div className={styles.blogImageContainer}>
+                            <Image
+                              src="/Japan-blog.jpg"
+                              alt="Japan-Tokyo"
+                              fill
+                              sizes="(max-width: 768px) 100vw, 50vw"
+                              className={styles.blogImage}
+                              priority
+                            />
+                            <div className={styles.blogOverlay}>
+                              <h3>7 Day Trip to Tokyo, Japan</h3>
+                            </div>
+                          </div>
+                          <div className={styles.blogMeta}>
+                            <div className={styles.blogAuthor}>
+                              <Image
+                                src="/author-mary.jpg"
+                                alt="Mary"
+                                width={24}
+                                height={24}
+                                className={styles.authorAvatar}
+                              />
+                              <span>Mary</span>
+                            </div>
+                            <div className={styles.likeButton}>
+                              <span>53</span> ❤
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+
+                    <div className={styles.sliderControls}>
+                      <button
+                        className={
+                          styles.sliderButton + " " + styles.nextButton
+                        }
+                      >
+                        ›
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
-        </div>
-        <div className={styles.chatButton}>
-          <button className={styles.chatIcon}>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.8214 2.48697 15.5291 3.33782 17L2.5 21.5L7 20.6622C8.47087 21.513 10.1786 22 12 22Z"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+        </main>
+
+        {/* Footer */}
+        <footer className={styles.footer}>
+          <div className={styles.footerInfo}>
+            <p>WTS Travel & Tours Pte Ltd</p>
+            <p>旅行社牌照号码 Travel Agent License Number: TA02307</p>
+            <p>Copyright 2023©</p>
+            <p>All rights reserved.</p>
+          </div>
+          <div className={styles.footerPartner}>
+            <p>A subsidiary of:</p>
+            <div className={styles.transportLogo}>
+              <Image
+                src="/woodlands-transport-logo.png"
+                alt="Woodlands Transport"
+                width={50}
+                height={50}
               />
-            </svg>
-          </button>
-        </div>
-      </footer>
+            </div>
+          </div>
+          <div className={styles.chatButton}>
+            <button className={styles.chatIcon}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.8214 2.48697 15.5291 3.33782 17L2.5 21.5L7 20.6622C8.47087 21.513 10.1786 22 12 22Z"
+                  stroke="white"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 }

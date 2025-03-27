@@ -463,8 +463,33 @@ const TripItineraryPage = () => {
         JSON.stringify(resetActivities)
       );
 
-      // 7. Reset trip confirmation status (although this will be handled by the useEffect)
+      // 7. Reset trip confirmation status
       setIsTripConfirmed(false);
+
+      // 8. NEW CODE: Update the trip status in savedTrips from "upcoming" to "planning"
+      try {
+        const savedTripsStr = localStorage.getItem("savedTrips");
+        if (savedTripsStr) {
+          const savedTrips = JSON.parse(savedTripsStr);
+
+          // Find and update the trip with matching ID
+          const updatedSavedTrips = savedTrips.map((trip) => {
+            if (trip.id.toString() === tripId) {
+              return {
+                ...trip,
+                status: "planning", // Change status from "upcoming" to "planning"
+              };
+            }
+            return trip;
+          });
+
+          // Save updated trips back to localStorage
+          localStorage.setItem("savedTrips", JSON.stringify(updatedSavedTrips));
+          console.log("Trip status reset to 'planning'");
+        }
+      } catch (error) {
+        console.error("Error updating saved trips:", error);
+      }
     }
   };
 
@@ -794,6 +819,13 @@ const TripItineraryPage = () => {
           ...updatedActivities[targetDay],
           newActivity,
         ];
+
+        // Save to localStorage after update
+        localStorage.setItem(
+          `activities_${tripId}`,
+          JSON.stringify(updatedActivities)
+        );
+
         return updatedActivities;
       });
     }
@@ -830,6 +862,12 @@ const TripItineraryPage = () => {
         // Add to target day
         updatedActivities[targetDay] = [...prev[targetDay], activityToAdd];
 
+        // Save to localStorage after update
+        localStorage.setItem(
+          `activities_${tripId}`,
+          JSON.stringify(updatedActivities)
+        );
+
         return updatedActivities;
       });
     }
@@ -853,16 +891,33 @@ const TripItineraryPage = () => {
         ...updatedActivities[targetDay],
         newActivity,
       ];
+
+      // Save to localStorage after update
+      localStorage.setItem(
+        `activities_${tripId}`,
+        JSON.stringify(updatedActivities)
+      );
+
       return updatedActivities;
     });
   };
 
   // Handle remove activity from a day
   const handleRemoveActivity = (activityId, day) => {
-    setDayActivities((prev) => ({
-      ...prev,
-      [day]: prev[day].filter((activity) => activity.id !== activityId),
-    }));
+    setDayActivities((prev) => {
+      const updatedActivities = {
+        ...prev,
+        [day]: prev[day].filter((activity) => activity.id !== activityId),
+      };
+
+      // Save to localStorage after update
+      localStorage.setItem(
+        `activities_${tripId}`,
+        JSON.stringify(updatedActivities)
+      );
+
+      return updatedActivities;
+    });
   };
 
   // Generate dates for each day of the trip

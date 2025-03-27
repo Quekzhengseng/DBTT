@@ -149,7 +149,7 @@
 }
 
 .sectionTitle {
-  margin: 0 0 1rem 0; /* Add spacing below the title */
+  margin: 0 0 0 0; /* Add spacing below the title */
   font-size: 1.4rem; /* Slightly larger */
   font-weight: bold;
   color: #333; /* Darker for contrast */
@@ -352,28 +352,197 @@
 }
 
 /* Comments Section */
+/* Add these CSS styles to your module.css file */
+
 .commentsSection {
-  margin-top: 3rem;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+}
+
+.commentInputContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.commentAvatar {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.commentInputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.commentInput {
+  width: 100%;
+  min-height: 100px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  resize: vertical;
+  font-family: inherit;
+  margin-bottom: 0.5rem;
+}
+
+.commentActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #eee;
+}
+
+.attachButton {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.postCommentButton {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.postCommentButton:hover {
+  background-color: #0055b3;
+}
+
+.commentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.commentItem {
+  display: flex;
+  gap: 1rem;
+}
+
+.commentContent {
+  flex: 1;
+}
+
+.commentHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.commenterName {
+  font-weight: 600;
+  color: #333;
+}
+
+.staffBadge {
+  background-color: #0066cc;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+
+.commentDate {
+  color: #777;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.commentText {
+  margin: 0;
+  line-height: 1.5;
+  color: #444;
+}
+
+.commentActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.likeButton,
+.replyButton {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #555;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.likeButton:hover,
+.replyButton:hover {
+  background-color: #eee;
+}
+
+.loadMoreButton {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  color: #555;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  transition: background-color 0.2s;
+}
+
+.loadMoreButton:hover {
+  background-color: #eee;
 }
 
 .addCommentButton {
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 4px;
   padding: 0.5rem 1rem;
-  background-color: white;
-  color: #1e56a0;
-  border: 1px solid #1e56a0;
-  border-radius: 20px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.addCommentButton:hover {
-  background-color: #1e56a0;
-  color: white;
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .commentItem {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .commentAvatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .commentHeader {
+    flex-wrap: wrap;
+  }
+
+  .commentDate {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 0.25rem;
+  }
 }
 
 /* Success Message */

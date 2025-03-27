@@ -17,12 +17,6 @@ const TripDetailModal = ({ isOpen, onClose, tripData, onTripCreated }) => {
   const [savedTrips, setSavedTrips] = useState([
     {
       id: 1,
-      destination: "New York City",
-      dates: "5 June - 26 June",
-      image: "/nyc-trip.jpg",
-    },
-    {
-      id: 2,
       destination: "Bangkok",
       dates: "5 November - 15 November",
       image: "/bangkok-trip.jpg",
@@ -53,6 +47,7 @@ const TripDetailModal = ({ isOpen, onClose, tripData, onTripCreated }) => {
         destination: tripData.destination,
         dates: `${tripData.startDate} - ${tripData.endDate}`,
         image: tripData.hotel.image,
+        status: "planning",
       };
 
       // Save to localStorage for the homepage to access

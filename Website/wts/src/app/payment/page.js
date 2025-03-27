@@ -31,14 +31,37 @@ function PaymentContent() {
 
   // Load saved data from localStorage
   useEffect(() => {
+    // Load trip details
     const savedTripDetails = localStorage.getItem(`trip_${tripId}`);
     if (savedTripDetails) {
-      setTripDetails(JSON.parse(savedTripDetails));
+      try {
+        const parsedTripDetails = JSON.parse(savedTripDetails);
+        setTripDetails(parsedTripDetails);
+        console.log("Loaded trip details:", parsedTripDetails);
+      } catch (error) {
+        console.error("Error parsing trip details:", error);
+      }
     }
 
+    // Load activities with improved error handling
     const savedActivities = localStorage.getItem(`activities_${tripId}`);
     if (savedActivities) {
-      setDayActivities(JSON.parse(savedActivities));
+      try {
+        const parsedActivities = JSON.parse(savedActivities);
+        console.log("Loaded activities:", parsedActivities);
+
+        // Ensure we have a proper object structure
+        if (parsedActivities && typeof parsedActivities === "object") {
+          setDayActivities(parsedActivities);
+        } else {
+          console.error(
+            "Saved activities is not a valid object:",
+            parsedActivities
+          );
+        }
+      } catch (error) {
+        console.error("Error parsing activities:", error);
+      }
     }
   }, [tripId]);
 
@@ -162,27 +185,50 @@ function PaymentContent() {
 
   const [totalCost, setTotalCost] = useState(0);
 
-  // Collect all unpaid items on component mount
+  // Enhanced unpaid items collection with more debugging
   useEffect(() => {
+    if (!tripDetails || !dayActivities) return;
+
+    console.log("Processing payment items from:", {
+      tripDetails,
+      dayActivities,
+    });
+
     const unpaidFlights = tripDetails.flights.filter(
       (flight) => flight.status === "pending"
     );
     const unpaidHotel =
       tripDetails.hotel.status === "pending" ? tripDetails.hotel : null;
 
-    // Collect all unpaid activities from all days
+    // Collect all unpaid activities from all days with improved logging
     const unpaidActivities = [];
     Object.keys(dayActivities).forEach((day) => {
-      dayActivities[day]
-        .filter(
-          (activity) => activity.status === "pending" && activity.price > 0
-        )
-        .forEach((activity) => {
-          unpaidActivities.push({
-            ...activity,
-            day,
+      console.log(`Processing day ${day} activities:`, dayActivities[day]);
+
+      if (Array.isArray(dayActivities[day])) {
+        dayActivities[day]
+          .filter(
+            (activity) => activity.status === "pending" && activity.price > 0
+          )
+          .forEach((activity) => {
+            console.log(`Adding pending activity from day ${day}:`, activity);
+            unpaidActivities.push({
+              ...activity,
+              day,
+            });
           });
-        });
+      } else {
+        console.warn(
+          `Day ${day} activities is not an array:`,
+          dayActivities[day]
+        );
+      }
+    });
+
+    console.log("Final unpaid items:", {
+      flights: unpaidFlights,
+      hotel: unpaidHotel,
+      activities: unpaidActivities,
     });
 
     setUnpaidItems({
@@ -208,15 +254,13 @@ function PaymentContent() {
     }));
   };
 
-  
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsProcessing(true);
 
     // Simulate payment processing
     setTimeout(() => {
-      // Update all items to confirmed
+      // Update all items to confirmed (your existing code)
       const updatedFlights = tripDetails.flights.map((flight) => ({
         ...flight,
         status: "confirmed",
@@ -231,7 +275,7 @@ function PaymentContent() {
         },
       };
 
-      // Update activities
+      // Update activities (your existing code)
       const updatedActivities = { ...dayActivities };
       Object.keys(updatedActivities).forEach((day) => {
         updatedActivities[day] = updatedActivities[day].map((activity) =>
@@ -239,7 +283,7 @@ function PaymentContent() {
         );
       });
 
-      // Save to localStorage
+      // Save to localStorage (your existing code)
       localStorage.setItem(
         `trip_${tripId}`,
         JSON.stringify(updatedTripDetails)
@@ -249,9 +293,34 @@ function PaymentContent() {
         JSON.stringify(updatedActivities)
       );
 
+      // NEW CODE: Update the trip status in savedTrips
+      try {
+        const savedTripsStr = localStorage.getItem("savedTrips");
+        if (savedTripsStr) {
+          const savedTrips = JSON.parse(savedTripsStr);
+
+          // Find and update the trip with matching ID
+          const updatedSavedTrips = savedTrips.map((trip) => {
+            if (trip.id.toString() === tripId) {
+              return {
+                ...trip,
+                status: "upcoming", // Change status from "planning" to "upcoming"
+              };
+            }
+            return trip;
+          });
+
+          // Save updated trips back to localStorage
+          localStorage.setItem("savedTrips", JSON.stringify(updatedSavedTrips));
+          console.log("Trip status updated to 'upcoming'");
+        }
+      } catch (error) {
+        console.error("Error updating saved trips:", error);
+      }
+
       setIsProcessing(false);
       setSuccessMessage(
-        "Payment successful! All bookings have been confirmed."
+        "Payment successful! All bookings have been confirmed and your trip is now upcoming."
       );
 
       // Redirect after 3 seconds
@@ -275,7 +344,7 @@ function PaymentContent() {
             <Image
               src="/wts-logo.png"
               alt="WTS Travel Logo"
-              width={120}
+              width={200}
               height={40}
             />
           </Link>
@@ -451,7 +520,6 @@ function PaymentContent() {
                           placeholder="1234 5678 9012 3456"
                           value={paymentInfo.cardNumber}
                           onChange={handleInputChange}
-                          required
                         />
                       </div>
 
@@ -465,7 +533,6 @@ function PaymentContent() {
                             placeholder="MM/YY"
                             value={paymentInfo.expiryDate}
                             onChange={handleInputChange}
-                            required
                           />
                         </div>
                         <div className={styles.formGroup}>
@@ -477,7 +544,6 @@ function PaymentContent() {
                             placeholder="123"
                             value={paymentInfo.cvv}
                             onChange={handleInputChange}
-                            required
                           />
                         </div>
                       </div>
@@ -491,7 +557,6 @@ function PaymentContent() {
                           placeholder="John Doe"
                           value={paymentInfo.cardholderName}
                           onChange={handleInputChange}
-                          required
                         />
                       </div>
 

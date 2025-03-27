@@ -12,16 +12,8 @@ const AddToTripModal = ({ isOpen, onClose, activity }) => {
   const [userTrips, setUserTrips] = useState([
     {
       id: 1,
-      title: "New York City",
-      dates: "5 June - 26 June 2025",
-      image: "/nyc-trip.jpg",
-      destination: "Bangkok, Thailand",
-      activities: [],
-    },
-    {
-      id: 2,
       title: "Bangkok",
-      dates: "10 November - 15 November 2025",
+      dates: "5 November - 15 November 2025",
       image: "/bangkok-trip.jpg",
       destination: "Bangkok, Thailand",
       activities: [],
@@ -29,7 +21,7 @@ const AddToTripModal = ({ isOpen, onClose, activity }) => {
     {
       id: 3,
       title: "My Japan Trip",
-      dates: "23 Feb - 28 Feb 2025",
+      dates: "20 Feb - 25 Feb 2025",
       image: "/tokyo-trip.jpg",
       destination: "Tokyo, Japan",
       activities: [],
