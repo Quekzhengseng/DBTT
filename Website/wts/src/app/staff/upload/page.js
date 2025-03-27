@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import FileUpload from "../../../components/FileUpload"; // Adjust the import path as needed
-import FileManager from "../../../components/FileManager"; // Import the new component
+import FileUpload from "../../../components/fileupload"; // Adjust the import path as needed
+import FileManager from "../../../components/filemanager"; // Import the new component
 import "./uploadPage.css";
 
 export default function UploadPage() {
