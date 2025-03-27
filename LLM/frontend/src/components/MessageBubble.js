@@ -41,7 +41,7 @@ export default function MessageBubble({ message }) {
           borderRadius: "1rem",
           borderTopRightRadius: isUser ? 0 : "1rem",
           borderTopLeftRadius: isUser ? "1rem" : 0,
-          maxWidth: "100%", // Allow the bubble to use its available space
+          maxWidth: "75%", // Allow the bubble to use its available space
           boxShadow: "0 1px 2px rgba(0,0,0,0.1)"
         }}
       >
@@ -54,10 +54,10 @@ export default function MessageBubble({ message }) {
           {!isUser && message.image && (
             <div style={{ 
               marginTop: "1rem", 
-              borderRadius: "0.5rem", 
+              borderRadius: 0, 
               overflow: "hidden", 
               maxWidth: "100%",
-              border: "1px solid rgba(0,0,0,0.1)"
+              border: "0px solid rgba(0,0,0,0.1)"
             }}>
               {mainImageError ? (
                 <div style={{ 
@@ -77,14 +77,16 @@ export default function MessageBubble({ message }) {
                   </div>
                 </div>
               ) : (
-                <div style={{ width: "100%" }}> {/* Removed fixed height to prevent cropping */}
+                <div style={{ width: "100%", maxHeight:"450px", overflow:'hidden' }}> {/* Removed fixed height to prevent cropping */}
                   <img
                     src={message.image.url} 
                     alt={message.image.alt || "Travel image"}
                     style={{ 
                       width: "100%", 
-                      height: "auto", // Let the image determine its height
-                      display: "block" // Remove any extra space
+                      maxHeight: "350px", // Let the image determine its height
+                      objectFit:"contain", // changed to contain to show full image without cropping
+                      display: "block" ,// Remove any extra space
+                      margin: "0 auto" // center image
                     }}
                     onError={handleImageError}
                   />

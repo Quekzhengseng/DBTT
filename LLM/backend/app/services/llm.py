@@ -96,7 +96,7 @@ class LLMService:
             return {
                 'message': "Hello there! Japan is perfect for this season! Here are some of our top Tokyo trip recommendations that you can add to your itinerary.",
                 'image': {
-                    'url': '/japan.jpeg',  # First image from the uploaded images
+                    'url': '/japan.png',  # First image from the uploaded images
                     'alt': 'Tokyo Trip  Recommendations',
                     'caption': 'Top Tokyo attractions: TeamLab Borderless, Mt Fuji, and Sanrio Puroland'
                 },
