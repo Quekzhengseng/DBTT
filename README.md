@@ -16,7 +16,7 @@ For running the project for the first time, you should be provided with a .env f
 Drag these 2 files into DBTT/website/wts/backend.
 
 Step-by-step guide to setting up the project
-Now to start the server:
+Now to start the server:  <br>
   a. Make sure that you are in the WTS directory with the command terminal opened. Then type "npm i" and wait for it to run finish.  <br>
   b. Then run "Npm run dev", you should be prompted to the server starting.  <br>
   c. In another terminal, go into backend directory that is within wts folder.  <br>
@@ -27,7 +27,7 @@ With this, you should be able to start the website up and running.
 4. Usage
 Instructions on how to run the project
 
-For instructions to go about the website and create a trip:
+For instructions to go about the website and create a trip:  <br>
   a. Type in tokyo, japan into the search bar and click search.  <br>
   b. Choose Free and Easy and select any of the packages. You will be prompted with a popup, scroll below to click on create trip.  <br>
   c. Upon clicking create trip, you will be prompted to another pop up. Click on save and exit subsequently.  <br>
