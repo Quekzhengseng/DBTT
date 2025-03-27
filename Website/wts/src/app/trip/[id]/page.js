@@ -887,7 +887,7 @@ const TripItineraryPage = () => {
               <Image
                 src="/wts-logo.png"
                 alt="WTS Travel Logo"
-                width={120}
+                width={200}
                 height={40}
               />
             </Link>
