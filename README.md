@@ -24,7 +24,7 @@ Now to start the server:  <br>
 
 With this, you should be able to start the website up and running.
 
-4. Usage
+5. Usage
 Instructions on how to run the project
 
 For instructions to go about the website and create a trip:  <br>
@@ -37,30 +37,30 @@ For instructions to go about the website and create a trip:  <br>
   g. To confirm the trip, click into make payment and subsequently click on pay.  <br>
   h. The page would auto reload once the payment goes through, you can head to the main page via the logo again. The trip would now be shown upcoming to indicate that it is confirmed.  <br>
 
-For instructions to go the the chatbot:
+For instructions to go the the chatbot:  <br>
   a. To view the chatbot, click into the chatbutton logo on the bottom right.  <br>
   b. You will enter a chat interface similar to chatgpt. You will then be able to ask about trips to japan.  <br>
 
-For instructions to start a ticket:
+For instructions to start a ticket:  <br>
   a. In the chatbot interface, start a conversation and ask it that "I have an booking issue".  <br>
   b. You will be prompted to give your details.  <br>
 
-For instructions to view the staff page:
+For instructions to view the staff page:  <br>
   a. In the url, put "/staff" to access the staff page to view the tickets.  <br>
   b. Upon viewing the tickets, you should be able to see the issue that you have raised just now.  <br>
   c. You would be able to resolve the ticket via clicking on it and scrolling below to change the filter.  <br>
 
-For instructions to view the upload document page for the Rag System:
+For instructions to view the upload document page for the Rag System:  <br>
   a. In the staff page, you will be able to see upload within the header.  <br>
   b. Upon clicking it, you will be able to see a page indicating upload. Scrolling below, you will see the documents that has been already uploaded.  <br>
   c. You will be able to upload more documents to enhance the RAG capability of the chatbot to answer questions.  <br>
 
-5. Architecture
+6. Architecture  <br>
   a. The team has utilised Chroma DB with OpenAI 3.5 Turbo. This enables our RAG System and at the same time keeps the system lightweight and fast.  <br>
   b. To enable our backend Server, the team utilised Python Flask to maintain the server and the endpoints.  <br>
   C. To enable our frontend website, the team utilised Next.Js to display UI/UX.  <br>
 
 
-6. Contact 
+7. Contact 
 If any issues occur upon installation or after, please contact @quekkyz on telegram for troubleshooting.
 
