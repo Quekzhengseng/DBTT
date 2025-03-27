@@ -1,45 +1,58 @@
-export const metadata = {
-    title: "WTS Travel - Staff Dashboard",
-    description: "Staff dashboard for managing customer support tickets",
-  }
-  
-  export default function StaffLayout({ children }) {
-    return (
-      <div className="min-h-screen bg-white">
-        {/* Top Navigation Bar */}
-        <header className="bg-white text-black py-4 border-b">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-col">
-              <h1 className="text-2xl font-bold">WTS Travel Staff Portal</h1>
-              <p className="text-sm text-gray-600">Staff Access</p>
-              
-              <nav className="mt-2">
-                <ul className="flex space-x-6">
-                  <li>
-                    <a href="/staff" className="text-[#3eafdb] hover:underline">
-                      Tickets
-                    </a>
-                  </li>
-                  <li>
-                    <a href="/" className="text-gray-700 hover:underline">
-                      Chat Interface
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="text-gray-700 hover:underline">
-                      Staff Account
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+"use client";
+
+import Link from "next/link";
+import "./staffNavbar.css"; // Import the CSS file
+
+export default function StaffLayout({ children }) {
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Top Navigation Bar */}
+      <header className="navbar">
+        <div className="navbar-container">
+          <div className="navbar-brand">
+            <img
+              src="/wts-logo.png"
+              alt="WTS Travel Logo"
+              className="navbar-logo"
+            />
+            <div>
+              <h1 className="navbar-title">WTS Travel Staff Portal</h1>
+              <p className="navbar-subtitle">Staff Access</p>
             </div>
           </div>
-        </header>
-        
-        {/* Main Content */}
-        <main>
-          {children}
-        </main>
-      </div>
-    )
-  }
+
+          <ul className="navbar-nav">
+            <li className="nav-item">
+              <a href="/staff" className="nav-link active">
+                Tickets
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/staff/upload" className="nav-link">
+                Upload Files
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="/chat" className="nav-link">
+                Chat Interface
+              </a>
+            </li>
+            <li className="nav-item">
+              <a href="#" className="nav-link">
+                Staff Account
+              </a>
+            </li>
+          </ul>
+
+          <div className="user-profile">
+            <div className="avatar">SA</div>
+            <span className="user-name">Staff Admin</span>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main>{children}</main>
+    </div>
+  );
+}

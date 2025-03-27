@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import ChatInterface from "@/components/ChatInterface";
-import Sidebar from "@/components/Sidebar";
+import Sidebar from "../../components/Sidebar";
 import { Loader2 } from "lucide-react";
+import Link from "next/link"; // Import Link for navigation
 
 export default function Home() {
   const [conversations, setConversations] = useState([]);
@@ -82,15 +83,55 @@ export default function Home() {
 
   if (loading && conversations.length === 0) {
     return (
-      <div className="flex items-center justify-center h-screen bg-white">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4">
-            <Loader2 className="w-8 h-8 text-[#3eafdb] animate-spin" />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          width: "100%",
+          backgroundColor: "white",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 9999,
+        }}
+      >
+        <div style={{ textAlign: "center", maxWidth: "350px" }}>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "64px",
+              height: "64px",
+              borderRadius: "50%",
+              marginBottom: "1rem",
+              margin: "0 auto 1rem auto",
+            }}
+          >
+            <Loader2
+              style={{
+                width: "32px",
+                height: "32px",
+                color: "#3eafdb",
+                animation: "spin 1s linear infinite",
+              }}
+            />
           </div>
-          <h2 className="text-xl font-medium text-[#22337c] mb-2">
+          <h2
+            style={{
+              fontSize: "1.25rem",
+              fontWeight: 500,
+              color: "#22337c",
+              marginBottom: "0.5rem",
+            }}
+          >
             Loading WTS Travel Assistant
           </h2>
-          <p className="text-gray-500">
+          <p style={{ color: "#6b7280" }}>
             Please wait while we prepare your experience
           </p>
         </div>
@@ -100,6 +141,56 @@ export default function Home() {
 
   return (
     <div className="app-container">
+      {/* Back to Home button with inline CSS */}
+      <div
+        style={{
+          position: "absolute",
+          top: "1rem",
+          right: "1rem",
+          zIndex: 10,
+        }}
+      >
+        <Link href="/">
+          <button
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              backgroundColor: "white",
+              padding: "0.5rem 1rem",
+              borderRadius: "0.5rem",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
+              border: "none",
+              cursor: "pointer",
+              color: "#333",
+              fontWeight: 500,
+              transition: "background-color 0.2s",
+            }}
+            onMouseOver={(e) =>
+              (e.currentTarget.style.backgroundColor = "#f5f5f5")
+            }
+            onMouseOut={(e) =>
+              (e.currentTarget.style.backgroundColor = "white")
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            Back to Home
+          </button>
+        </Link>
+      </div>
+
       {/* Sidebar component with conversation history and controls */}
       <Sidebar
         conversations={conversations}

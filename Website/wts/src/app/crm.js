@@ -1,7 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Inbox, AlertTriangle, Clock, CheckCircle, Search, Filter, RefreshCw } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import {
+  Inbox,
+  AlertTriangle,
+  Clock,
+  CheckCircle,
+  Search,
+  Filter,
+  RefreshCw,
+  Upload,
+  X,
+  FileText,
+} from "lucide-react";
+
+// Import FileUpload component - assuming it's in the same folder or adjust path as needed
+import FileUpload from "./FileUpload";
 
 export default function CRMPage() {
   const [tickets, setTickets] = useState([]);
@@ -9,6 +23,7 @@ export default function CRMPage() {
   const [filter, setFilter] = useState({ urgency: "All", status: "All" });
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showFileUpload, setShowFileUpload] = useState(false);
 
   useEffect(() => {
     fetchTickets();
@@ -31,6 +46,7 @@ export default function CRMPage() {
 
   const handleTicketClick = (ticket) => {
     setSelectedTicket(ticket);
+    setShowFileUpload(false); // Hide file upload when selecting a new ticket
   };
 
   const handleStatusUpdate = async (ticketId, newStatus) => {
@@ -49,7 +65,9 @@ export default function CRMPage() {
       if (response.ok) {
         setTickets((prev) =>
           prev.map((ticket) =>
-            ticket.ticket_id === ticketId ? { ...ticket, status: newStatus } : ticket
+            ticket.ticket_id === ticketId
+              ? { ...ticket, status: newStatus }
+              : ticket
           )
         );
 
@@ -62,20 +80,37 @@ export default function CRMPage() {
     }
   };
 
+  const handleFileUploadSuccess = () => {
+    // Refresh tickets or show notification
+    fetchTickets();
+    // Optionally show a success notification
+  };
+
+  const toggleFileUpload = () => {
+    setShowFileUpload((prev) => !prev);
+  };
+
   const filterTickets = (tickets) => {
     return tickets.filter((ticket) => {
-      const matchesFilter = (
+      const matchesFilter =
         (filter.urgency === "All" || ticket.urgency === filter.urgency) &&
-        (filter.status === "All" || ticket.status === filter.status)
-      );
-      
-      const matchesSearch = searchQuery === "" || 
-        (ticket.message && ticket.message.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (ticket.user_id && ticket.user_id.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (ticket.user_name && ticket.user_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (ticket.user_email && ticket.user_email.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (ticket.order_id && ticket.order_id.toLowerCase().includes(searchQuery.toLowerCase()));
-      
+        (filter.status === "All" || ticket.status === filter.status);
+
+      const matchesSearch =
+        searchQuery === "" ||
+        (ticket.message &&
+          ticket.message.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (ticket.user_id &&
+          ticket.user_id.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (ticket.user_name &&
+          ticket.user_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (ticket.user_email &&
+          ticket.user_email
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase())) ||
+        (ticket.order_id &&
+          ticket.order_id.toLowerCase().includes(searchQuery.toLowerCase()));
+
       return matchesFilter && matchesSearch;
     });
   };
@@ -144,8 +179,10 @@ export default function CRMPage() {
         <div className="bg-white rounded-lg shadow-sm border p-4 mb-6">
           <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-4">
             <div className="flex items-center">
-              <h2 className="text-xl font-semibold text-[#22337c]">Support Tickets</h2>
-              <button 
+              <h2 className="text-xl font-semibold text-[#22337c]">
+                Support Tickets
+              </h2>
+              <button
                 onClick={fetchTickets}
                 className="ml-4 p-2 text-[#3eafdb] hover:bg-gray-100 rounded-full"
                 title="Refresh"
@@ -172,7 +209,9 @@ export default function CRMPage() {
                 <select
                   className="border rounded-md px-3 py-2 text-sm bg-white"
                   value={filter.urgency}
-                  onChange={(e) => setFilter({ ...filter, urgency: e.target.value })}
+                  onChange={(e) =>
+                    setFilter({ ...filter, urgency: e.target.value })
+                  }
                 >
                   <option value="All">All Urgency</option>
                   <option value="High">High</option>
@@ -183,7 +222,9 @@ export default function CRMPage() {
                 <select
                   className="border rounded-md px-3 py-2 text-sm bg-white"
                   value={filter.status}
-                  onChange={(e) => setFilter({ ...filter, status: e.target.value })}
+                  onChange={(e) =>
+                    setFilter({ ...filter, status: e.target.value })
+                  }
                 >
                   <option value="All">All Status</option>
                   <option value="Open">Open</option>
@@ -209,7 +250,9 @@ export default function CRMPage() {
                   <div className="mx-auto w-16 h-16 flex items-center justify-center rounded-full bg-gray-100">
                     <Inbox className="w-8 h-8 text-gray-400" />
                   </div>
-                  <p className="mt-4 text-gray-500">No tickets found matching your criteria</p>
+                  <p className="mt-4 text-gray-500">
+                    No tickets found matching your criteria
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
@@ -217,31 +260,45 @@ export default function CRMPage() {
                     <div
                       key={ticket.ticket_id}
                       className={`p-4 border rounded-lg cursor-pointer transition-colors hover:bg-gray-50 ${
-                        selectedTicket?.ticket_id === ticket.ticket_id ? "border-[#3eafdb] bg-[#3eafdb]/5" : ""
+                        selectedTicket?.ticket_id === ticket.ticket_id
+                          ? "border-[#3eafdb] bg-[#3eafdb]/5"
+                          : ""
                       }`}
                       onClick={() => handleTicketClick(ticket)}
                     >
                       <div className="flex justify-between items-start">
                         <div className="flex-1 mr-4">
-                          <h3 className="font-medium text-[#22337c] line-clamp-1">{ticket.message}</h3>
+                          <h3 className="font-medium text-[#22337c] line-clamp-1">
+                            {ticket.message}
+                          </h3>
                           <div className="flex items-center text-sm text-gray-500 mt-1 space-x-4">
                             <div className="flex items-center">
-                              <span className="text-xs text-gray-500">{formatDate(ticket.created_at)}</span>
+                              <span className="text-xs text-gray-500">
+                                {formatDate(ticket.created_at)}
+                              </span>
                             </div>
                             {ticket.user_name && (
                               <div className="flex items-center">
-                                <span className="text-xs font-medium">{ticket.user_name}</span>
+                                <span className="text-xs font-medium">
+                                  {ticket.user_name}
+                                </span>
                               </div>
                             )}
                             {ticket.order_id && (
                               <div className="flex items-center">
-                                <span className="text-xs">Order: {ticket.order_id}</span>
+                                <span className="text-xs">
+                                  Order: {ticket.order_id}
+                                </span>
                               </div>
                             )}
                           </div>
                         </div>
                         <div className="flex flex-col gap-2 items-end">
-                          <span className={`px-2 py-1 text-xs font-medium rounded-full text-white ${getUrgencyColor(ticket.urgency)}`}>
+                          <span
+                            className={`px-2 py-1 text-xs font-medium rounded-full text-white ${getUrgencyColor(
+                              ticket.urgency
+                            )}`}
+                          >
                             {ticket.urgency}
                           </span>
                           {getStatusBadge(ticket.status)}
@@ -257,55 +314,119 @@ export default function CRMPage() {
               {selectedTicket ? (
                 <div className="border rounded-lg bg-white p-6 sticky top-4">
                   <div className="border-b pb-4 mb-4">
-                    <h2 className="text-lg font-semibold text-[#22337c]">Ticket Details</h2>
+                    <h2 className="text-lg font-semibold text-[#22337c]">
+                      Ticket Details
+                    </h2>
                   </div>
-                  
+
                   <div className="space-y-4">
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Customer Message</h3>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Customer Message
+                      </h3>
                       <p className="mt-1 text-sm">{selectedTicket.message}</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">Ticket ID</h3>
-                        <p className="mt-1 text-sm font-mono">{selectedTicket.ticket_id}</p>
+                        <h3 className="text-sm font-medium text-gray-500">
+                          Ticket ID
+                        </h3>
+                        <p className="mt-1 text-sm font-mono">
+                          {selectedTicket.ticket_id}
+                        </p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">Created</h3>
-                        <p className="mt-1 text-sm">{formatDate(selectedTicket.created_at)}</p>
+                        <h3 className="text-sm font-medium text-gray-500">
+                          Created
+                        </h3>
+                        <p className="mt-1 text-sm">
+                          {formatDate(selectedTicket.created_at)}
+                        </p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">Type</h3>
-                        <p className="mt-1 text-sm">{selectedTicket.intent || "Not specified"}</p>
+                        <h3 className="text-sm font-medium text-gray-500">
+                          Type
+                        </h3>
+                        <p className="mt-1 text-sm">
+                          {selectedTicket.intent || "Not specified"}
+                        </p>
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text-gray-500">Urgency</h3>
-                        <span className={`mt-1 inline-block px-2 py-1 rounded-full text-xs font-medium text-white ${getUrgencyColor(selectedTicket.urgency)}`}>
+                        <h3 className="text-sm font-medium text-gray-500">
+                          Urgency
+                        </h3>
+                        <span
+                          className={`mt-1 inline-block px-2 py-1 rounded-full text-xs font-medium text-white ${getUrgencyColor(
+                            selectedTicket.urgency
+                          )}`}
+                        >
                           {selectedTicket.urgency}
                         </span>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Customer Details</h3>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Customer Details
+                      </h3>
                       <div className="mt-1 space-y-1 text-sm border-l-2 border-[#3eafdb] pl-3 py-1">
-                        <p><strong>Name:</strong> {selectedTicket.user_name || "Not provided"}</p>
-                        <p><strong>Email:</strong> {selectedTicket.user_email || "Not provided"}</p>
-                        <p><strong>Order ID:</strong> {selectedTicket.order_id || "Not provided"}</p>
+                        <p>
+                          <strong>Name:</strong>{" "}
+                          {selectedTicket.user_name || "Not provided"}
+                        </p>
+                        <p>
+                          <strong>Email:</strong>{" "}
+                          {selectedTicket.user_email || "Not provided"}
+                        </p>
+                        <p>
+                          <strong>Order ID:</strong>{" "}
+                          {selectedTicket.order_id || "Not provided"}
+                        </p>
                       </div>
                     </div>
 
+                    {/* File Upload Section */}
                     <div>
-                      <h3 className="text-sm font-medium text-gray-500">Status</h3>
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-sm font-medium text-gray-500">
+                          Supporting Documents
+                        </h3>
+                        <button
+                          onClick={toggleFileUpload}
+                          className="text-xs text-[#3eafdb] hover:underline flex items-center"
+                        >
+                          <Upload className="w-3 h-3 mr-1" />
+                          {showFileUpload ? "Hide Upload" : "Upload Files"}
+                        </button>
+                      </div>
+
+                      {showFileUpload && (
+                        <div className="mt-2 p-3 border border-dashed rounded-md bg-gray-50">
+                          <FileUpload
+                            onUploadSuccess={handleFileUploadSuccess}
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">
+                        Status
+                      </h3>
                       <div className="mt-2">
                         <select
                           className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#3eafdb]"
                           value={selectedTicket.status}
-                          onChange={(e) => handleStatusUpdate(selectedTicket.ticket_id, e.target.value)}
+                          onChange={(e) =>
+                            handleStatusUpdate(
+                              selectedTicket.ticket_id,
+                              e.target.value
+                            )
+                          }
                         >
                           <option value="Open">Open</option>
                           <option value="In Progress">In Progress</option>
@@ -315,7 +436,7 @@ export default function CRMPage() {
                     </div>
 
                     <div className="pt-4 mt-4 border-t text-right">
-                      <button 
+                      <button
                         className="px-4 py-2 bg-[#22337c] text-white rounded-md hover:bg-[#22337c]/90 transition-colors"
                         onClick={() => setSelectedTicket(null)}
                       >
@@ -329,8 +450,12 @@ export default function CRMPage() {
                   <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
                     <Inbox className="w-8 h-8 text-gray-400" />
                   </div>
-                  <h3 className="text-lg font-medium text-[#22337c] mb-1">No Ticket Selected</h3>
-                  <p className="text-gray-500 text-sm">Select a ticket from the list to view its details</p>
+                  <h3 className="text-lg font-medium text-[#22337c] mb-1">
+                    No Ticket Selected
+                  </h3>
+                  <p className="text-gray-500 text-sm">
+                    Select a ticket from the list to view its details
+                  </p>
                 </div>
               )}
             </div>
