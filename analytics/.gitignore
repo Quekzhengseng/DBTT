@@ -1,0 +1,7 @@
+__pycache__/
+dbttenv/
+*.py[cod]
+*.env
+.vscode/
+*.log
+*.tmp
