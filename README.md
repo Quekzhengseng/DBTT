@@ -6,10 +6,10 @@ This is Groups 1's digital transformation project to transform WTS Travel for th
 
 2. Description
 A concise summary of what the project does and its purpose.
-The team has implemented a few features to enable WTS Travel to expand their business domain and ventures. Some key features include:
-  a. Redesigned Website to enable drag and drop travel itinenary. 
-  b. Access to a LLM chatbot with RAG implementation to enable self help of users and selling of packages.
-  c. Auto CRM ticketing system that identifies and classifies issues that customers have through the LLM chatbot, allowing agents to clear tickets with more efficiency
+The team has implemented a few features to enable WTS Travel to expand their business domain and ventures. Some key features include: <br>
+  a. Redesigned Website to enable drag and drop travel itinenary.   <br>
+  b. Access to a LLM chatbot with RAG implementation to enable self help of users and selling of packages.  <br>
+  c. Auto CRM ticketing system that identifies and classifies issues that customers have through the LLM chatbot, allowing agents to clear tickets with more efficiency  <br>
 
 4. Installation
 For running the project for the first time, you should be provided with a .env file and a firebase.json key to allow for the chatbot and storage functions to work.
