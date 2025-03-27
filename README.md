@@ -54,12 +54,11 @@ For instructions to view the upload document page for the Rag System:  <br>
   a. In the staff page, you will be able to see upload within the header.  <br>
   b. Upon clicking it, you will be able to see a page indicating upload. Scrolling below, you will see the documents that has been already uploaded.  <br>
   c. You will be able to upload more documents to enhance the RAG capability of the chatbot to answer questions.  <br>
-
+  
 6. Architecture  <br>
   a. The team has utilised Chroma DB with OpenAI 3.5 Turbo. This enables our RAG System and at the same time keeps the system lightweight and fast.  <br>
   b. To enable our backend Server, the team utilised Python Flask to maintain the server and the endpoints.  <br>
   C. To enable our frontend website, the team utilised Next.Js to display UI/UX.  <br>
-
 
 7. Contact 
 If any issues occur upon installation or after, please contact @quekkyz on telegram for troubleshooting.
