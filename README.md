@@ -11,19 +11,20 @@ The team has implemented a few features to enable WTS Travel to expand their bus
   a. Redesigned Website to enable drag and drop travel itinenary.   <br>
   b. Access to a LLM chatbot with RAG implementation to enable self help of users and selling of packages.  <br>
   c. Auto CRM ticketing system that identifies and classifies issues that customers have through the LLM chatbot, allowing agents to clear tickets with more efficiency  <br>
+  d. Data Analysis of Kaggle Based File and Deployment via Streamlit
 
 4. Installation
 For running the project for the first time, you should be provided with a .env file and a firebase.json key to allow for the chatbot and storage functions to work.
-Drag these 2 files into DBTT/website/wts/backend.
+Drag these 2 files into DBTT/backend.
 
 Step-by-step guide to setting up the project
 Now to start the server:  <br>
   a. Make sure that you are in the WTS directory with the command terminal opened. Then type "npm i" and wait for it to run finish.  <br>
-  b. Then run "Npm run dev", you should be prompted to the server starting.  <br>
-  c. In another terminal, go into backend directory that is within wts folder.  <br>
+  b. Then run "npm run dev", you should be prompted to the server starting with the link provided.  <br>
+  c. In another terminal, go into backend directory that is within DBTT folder.  <br>
   d. Run "docker compose up --build" to start the backend server.  <br>
 
-With this, you should be able to start the website up and running.
+With this, you should be able to view the website with the functions deployed.
 
 5. Usage
 Instructions on how to run the project
@@ -55,11 +56,15 @@ For instructions to view the upload document page for the Rag System:  <br>
   a. In the staff page, you will be able to see upload within the header.  <br>
   b. Upon clicking it, you will be able to see a page indicating upload. Scrolling below, you will see the documents that has been already uploaded.  <br>
   c. You will be able to upload more documents to enhance the RAG capability of the chatbot to answer questions.  <br>
+
+For instructions to view the Data Analysis of the Kaggle Dataset: <br>
+  a. Link to the Deployment: https://dbbtanalytics-ay2425g10t01.streamlit.app/ <br>
+  b. A more defined readMe for the self deployment is within the analytics folder where the source code is contained. <br>
   
 6. Architecture  <br>
   a. The team has utilised Chroma DB with OpenAI 3.5 Turbo. This enables our RAG System and at the same time keeps the system lightweight and fast.  <br>
   b. To enable our backend Server, the team utilised Python Flask to maintain the server and the endpoints.  <br>
-  C. To enable our frontend website, the team utilised Next.Js to display UI/UX.  <br>
+  c. To enable our frontend website, the team utilised Next.Js to display UI/UX.  <br>
 
 7. Contact 
 If any issues occur upon installation or after, please contact @quekkyz on telegram for troubleshooting.
