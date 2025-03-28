@@ -1,0 +1,177 @@
+/* components/MyTripsModal.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
+
+.modalContent {
+  background-color: #00b4db;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.tripsList {
+  padding: 1rem;
+}
+
+.tripCard {
+  display: flex;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  cursor: pointer;
+  color: #333;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tripCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tripCard.selected {
+  border: 2px solid #ff9800;
+}
+
+.tripInfo {
+  flex: 1;
+  padding-right: 1rem;
+}
+
+.tripDestination {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: text;
+}
+
+.tripNameInput {
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #1e56a0;
+  padding: 0.2rem 0;
+  margin-bottom: 0.5rem;
+  outline: none;
+  color: #333;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 1.5rem 0.5rem 1.5rem;
+}
+
+.renameButton {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.renameButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.tripDates {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.tripImageContainer {
+  width: 100px;
+  height: 70px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.tripImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.cancelButton, .saveButton {
+  padding: 0.7rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancelButton {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+}
+
+.cancelButton:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.saveButton {
+  background-color: white;
+  border: none;
+  color: #00b4db;
+}
+
+.saveButton:hover {
+  background-color: #f5f5f5;
+}
