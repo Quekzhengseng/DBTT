@@ -116,6 +116,7 @@ const DraggableActivity = ({
       ref={drag}
       className={`${styles.activity} ${isDragging ? styles.dragging : ""}`}
     >
+      {/* Left column - Activity content */}
       <div className={styles.activityContent}>
         <div className={styles.activityHeader}>
           <h4>{activity.title}</h4>
@@ -141,6 +142,21 @@ const DraggableActivity = ({
         {(origin === "recommendations" || origin === "itinerary") &&
           activity.rating &&
           renderStars(activity.rating)}
+      </div>
+
+      {/* Right column - Image and checkout button */}
+      <div className={styles.activityRightSection}>
+        {activity.image && (
+          <div className={styles.activityImageContainer}>
+            <Image
+              src={activity.image}
+              alt={activity.title}
+              width={80}
+              height={60}
+              className={styles.activityImage}
+            />
+          </div>
+        )}
 
         {/* Show checkout button for itinerary paid activities */}
         {origin === "itinerary" && activity.price > 0 && (
@@ -180,26 +196,25 @@ const DraggableActivity = ({
           </div>
         )}
       </div>
-      {activity.image && (
-        <div className={styles.activityImageContainer}>
-          <Image
-            src={activity.image}
-            alt={activity.title}
-            width={80}
-            height={60}
-            className={styles.activityImage}
-          />
-        </div>
+
+      {origin === "itinerary" && (
+        <button
+          className={styles.removeButton}
+          onClick={() => onRemove(activity.id, day)}
+        >
+          ×
+        </button>
       )}
-      {origin === "recommendations" && (
-        <div className={styles.activityPrice}>${activity.price}</div>
-      )}
+
+      {/* "Add to Trip" button for recommendations */}
       {origin === "recommendations" && (
         <button
           className={styles.addButton}
-          onClick={() => onAddToDay(activity, 1)} // Add to Day 1
+          onClick={() => onAddToDay(activity, 1)}
         >
-          Add to Trip
+          {activity.price > 0
+            ? `Add to Trip ($${activity.price})`
+            : "Add to Trip"}
         </button>
       )}
     </div>
@@ -213,6 +228,11 @@ const DroppableDay = ({
   onDrop,
   onRemove,
   onCheckout,
+  notes,
+  onEditNotes,
+  isEditingNotes,
+  onSaveNotes,
+  onCancelEdit,
 }) => {
   const [{ isOver }, drop] = useDrop(
     () => ({
@@ -227,7 +247,15 @@ const DroppableDay = ({
       }),
     }),
     [day, onDrop]
-  ); // Add dependencies to ensure useDrop recreates when these change
+  );
+
+  // State for editing notes
+  const [editedNotesContent, setEditedNotesContent] = useState(notes || "");
+
+  // Update the editedNotesContent when notes prop changes
+  useEffect(() => {
+    setEditedNotesContent(notes || "");
+  }, [notes]);
 
   return (
     <div
@@ -243,30 +271,50 @@ const DroppableDay = ({
       <div className={styles.dayNotes}>
         <div className={styles.dayNotesHeader}>
           <h4 className={styles.dayNotesTitle}>Notes</h4>
-          <button className={styles.editNotesButton}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {isEditingNotes ? (
+            <div className={styles.editButtonsGroup}>
+              <button
+                className={styles.saveButton}
+                onClick={() => onSaveNotes(day, editedNotesContent)}
+              >
+                Save
+              </button>
+              <button className={styles.cancelButton} onClick={onCancelEdit}>
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              className={styles.editNotesButton}
+              onClick={() => onEditNotes(day)}
             >
-              <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-            </svg>
-            Edit
-          </button>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+              Edit
+            </button>
+          )}
         </div>
         <div className={styles.dayNotesContent}>
-          {day === 1 && "Check in around 3pm by Lawson Red."}
-          {day === 2 &&
-            "Visit Tokyo Imperial Palace first. Take shopping at Shibuya at night."}
-          {day === 3 && "Leave comfort zone to explore for dinner."}
-          {day === 4 && ""}
-          {day === 5 && ""}
-          {day === 6 && ""}
+          {isEditingNotes ? (
+            <textarea
+              className={styles.notesTextarea}
+              value={editedNotesContent}
+              onChange={(e) => setEditedNotesContent(e.target.value)}
+              placeholder="Add your notes for this day..."
+            />
+          ) : (
+            notes || ""
+          )}
         </div>
       </div>
       <div className={styles.activitiesSection} ref={drop}>
@@ -359,6 +407,65 @@ const TripItineraryPage = () => {
   // State for pending payments calculation
   const [totalPendingAmount, setTotalPendingAmount] = useState(0);
   const [pendingItemsCount, setPendingItemsCount] = useState(0);
+
+  // First, add state for tracking which day's notes are being edited
+  const [editingNotesForDay, setEditingNotesForDay] = useState(null);
+  const [dayNotes, setDayNotes] = useState({
+    1: "",
+    2: "",
+    3: "",
+    4: "",
+    5: "",
+    6: "",
+  });
+
+  // Function to handle starting editing notes for a specific day
+  const handleEditNotes = (day) => {
+    setEditingNotesForDay(day);
+  };
+
+  // Function to save edited notes
+  const handleSaveNotes = (day, newNotes) => {
+    setDayNotes((prev) => ({
+      ...prev,
+      [day]: newNotes,
+    }));
+
+    // Save to localStorage
+    localStorage.setItem(
+      `notes_${tripId}`,
+      JSON.stringify({
+        ...dayNotes,
+        [day]: newNotes,
+      })
+    );
+
+    setEditingNotesForDay(null);
+  };
+
+  // Function to cancel editing
+  const handleCancelEdit = () => {
+    setEditingNotesForDay(null);
+  };
+
+  // Modify the useEffect to load saved notes from localStorage
+  useEffect(() => {
+    const savedTripDetails = localStorage.getItem(`trip_${tripId}`);
+    if (savedTripDetails) {
+      setTripDetails(JSON.parse(savedTripDetails));
+    }
+
+    const savedActivities = localStorage.getItem(`activities_${tripId}`);
+    if (savedActivities) {
+      setDayActivities(JSON.parse(savedActivities));
+    }
+
+    // Load saved notes
+    const savedNotes = localStorage.getItem(`notes_${tripId}`);
+    if (savedNotes) {
+      setDayNotes(JSON.parse(savedNotes));
+    }
+  }, [tripId]);
 
   // State for trip details
   const [tripDetails, setTripDetails] = useState({
@@ -505,65 +612,9 @@ const TripItineraryPage = () => {
         rating: 4.2,
       },
     ],
-    2: [
-      {
-        id: "existing-2",
-        title: "Tokyo Imperial Palace",
-        time: "09:00 - 11:30",
-        description: "Visit the primary residence of the Emperor of Japan",
-        image: "/tokyo-palace.jpg",
-        price: 0,
-        status: "confirmed",
-        rating: 4,
-      },
-      {
-        id: "existing-3",
-        title: "Shopping at Shibuya",
-        time: "14:00 - 17:00",
-        description: "Visit the famous crossing and enjoy shopping",
-        image: "/shibuya.jpg",
-        price: 0,
-        status: "confirmed",
-        rating: 4.7,
-      },
-    ],
-    3: [
-      {
-        id: "existing-4",
-        title: "Meiji Jingu Tour",
-        time: "09:00 - 13:30",
-        description: "Dedicated to Emperor Meiji and Empress Shoken",
-        image: "/meiji-jingu.jpg",
-        duration: "4.5 hours",
-        price: 100,
-        status: "pending",
-        rating: 3.8,
-      },
-      {
-        id: "existing-5",
-        title: "Shibuya Sky",
-        time: "15:00 - 17:30",
-        description: "Observation deck with an excellent view of Tokyo",
-        image: "/shibuya-sky.jpg",
-        duration: "2.5 hours",
-        price: 100,
-        status: "pending",
-        rating: 5,
-      },
-    ],
-    4: [
-      {
-        id: "existing-6",
-        title: "Tokyo Disneyland",
-        time: "09:00 - 20:00",
-        description: 'Enjoy the "happiest place on Earth" for a full day',
-        image: "/tokyo-disneyland.jpg",
-        duration: "11 hours",
-        price: 110,
-        status: "pending",
-        rating: 4.5,
-      },
-    ],
+    2: [],
+    3: [],
+    4: [],
     5: [],
     6: [],
   });
@@ -646,6 +697,7 @@ const TripItineraryPage = () => {
       image: "/teamlab.jpg",
       price: 35,
       duration: "2-3 hours",
+      time: "10:00 - 13:00",
       rating: 4.7,
     },
     {
@@ -655,6 +707,7 @@ const TripItineraryPage = () => {
       image: "/sanrio.jpg",
       price: 45,
       duration: "4-5 hours",
+      time: "10:00 - 15:00",
       rating: 4.5,
     },
     {
@@ -664,6 +717,7 @@ const TripItineraryPage = () => {
       image: "/mtfuji.jpg",
       price: 125,
       duration: "Full day",
+      time: "08:00 - 18:00",
       rating: 4.6,
     },
     {
@@ -673,6 +727,7 @@ const TripItineraryPage = () => {
       image: "/teamlab-planets.jpg",
       price: 35,
       duration: "2-3 hours",
+      time: "13:00 - 16:00",
       rating: 4.7,
     },
     {
@@ -682,6 +737,7 @@ const TripItineraryPage = () => {
       image: "/tokyo-tower.jpg",
       price: 25,
       duration: "2-3 hours",
+      time: "11:00 - 14:00",
       rating: 4.5,
     },
     {
@@ -691,7 +747,56 @@ const TripItineraryPage = () => {
       image: "/tsukiji.jpg",
       price: 0,
       duration: "3-4 hours",
+      time: "06:00 - 10:00",
       rating: 4.6,
+    },
+    {
+      id: "rec-7",
+      title: "Tokyo Disneyland",
+      description: 'Enjoy the "happiest place on Earth" for a full day',
+      image: "/tokyo-disneyland.jpg",
+      duration: "11 hours",
+      time: "09:00 - 20:00",
+      price: 110,
+      rating: 4.5,
+    },
+    {
+      id: "rec-8",
+      title: "Shibuya Sky",
+      description: "Observation deck with an excellent view of Tokyo",
+      image: "/shibuya-sky.jpg",
+      duration: "2.5 hours",
+      time: "15:00 - 17:30",
+      price: 100,
+      rating: 5,
+    },
+    {
+      id: "rec-9",
+      title: "Meiji Jingu Tour",
+      description: "Dedicated to Emperor Meiji and Empress Shoken",
+      image: "/meiji-jingu.jpg",
+      duration: "4.5 hours",
+      time: "09:30 - 14:00",
+      price: 100,
+      rating: 3.8,
+    },
+    {
+      id: "rec-10",
+      title: "Tokyo Imperial Palace",
+      description: "Visit the primary residence of the Emperor of Japan",
+      image: "/tokyo-palace.jpg",
+      price: 0,
+      time: "09:00 - 11:30",
+      rating: 4,
+    },
+    {
+      id: "rec-11",
+      title: "Shopping at Shibuya",
+      description: "Visit the famous crossing and enjoy shopping",
+      image: "/shibuya.jpg",
+      price: 0,
+      time: "14:00 - 17:00",
+      rating: 4.7,
     },
   ]);
 
@@ -1103,44 +1208,6 @@ const TripItineraryPage = () => {
                       <div className={styles.time}>19:15</div>
                       <div className={styles.airport}>NRT T1</div>
                     </div>
-                    <div className={styles.flightPrice}>
-                      <div className={styles.price}>
-                        ${tripDetails.flights[0].price}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.flightActions}>
-                    {tripDetails.flights[0].status === "pending" ? (
-                      <button
-                        className={styles.checkoutBtn}
-                        onClick={() =>
-                          handleOpenPayment(tripDetails.flights[0], "flight")
-                        }
-                      >
-                        Checkout
-                      </button>
-                    ) : (
-                      <div className={styles.confirmedStatus}>
-                        <svg
-                          className={styles.checkIcon}
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle cx="12" cy="12" r="10" fill="#4CAF50" />
-                          <path
-                            d="M8 12L11 15L16 9"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        Confirmed
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -1169,49 +1236,44 @@ const TripItineraryPage = () => {
                       <div className={styles.time}>16:40</div>
                       <div className={styles.airport}>SIN T1</div>
                     </div>
-                    <div className={styles.flightPrice}>
-                      <div className={styles.price}>
-                        ${tripDetails.flights[0].price}
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.flightActions}>
-                    {tripDetails.flights[1].status === "pending" ? (
-                      <button
-                        className={styles.checkoutBtn}
-                        onClick={() =>
-                          handleOpenPayment(tripDetails.flights[1], "flight")
-                        }
-                      >
-                        Checkout
-                      </button>
-                    ) : (
-                      <div className={styles.confirmedStatus}>
-                        <svg
-                          className={styles.checkIcon}
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <circle cx="12" cy="12" r="10" fill="#4CAF50" />
-                          <path
-                            d="M8 12L11 15L16 9"
-                            stroke="white"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                        Confirmed
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
-            </div>
 
+              {/* Flight checkout button - positioned at the bottom similar to hotel */}
+              {tripDetails.flights[0].status === "pending" ||
+              tripDetails.flights[1].status === "pending" ? (
+                <button
+                  className={styles.checkoutBtn}
+                  onClick={() =>
+                    handleOpenPayment(tripDetails.flights[0], "flight")
+                  }
+                >
+                  Checkout ${tripDetails.flights[0].price}
+                </button>
+              ) : (
+                <div className={styles.confirmedBooking}>
+                  <svg
+                    className={styles.checkIcon}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="12" r="10" fill="#4CAF50" />
+                    <path
+                      d="M8 12L11 15L16 9"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Booking Confirmed
+                </div>
+              )}
+            </div>
             {/* Hotel Information */}
             <div className={styles.sectionContainer}>
               <h2 className={styles.sectionTitle}>
@@ -1323,6 +1385,11 @@ const TripItineraryPage = () => {
                   onDrop={handleDrop}
                   onRemove={handleRemoveActivity}
                   onCheckout={handleOpenPayment}
+                  notes={dayNotes[day]}
+                  onEditNotes={handleEditNotes}
+                  isEditingNotes={editingNotesForDay === day}
+                  onSaveNotes={handleSaveNotes}
+                  onCancelEdit={handleCancelEdit}
                 />
               )
             )}
