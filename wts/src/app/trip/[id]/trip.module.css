@@ -263,6 +263,12 @@
 .flightPrice {
   margin-left: auto;
   text-align: right;
+  color: #1e56a0;
+  padding: 0.4rem;
+  padding-right: 0.8rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+
 }
 
 .price {
@@ -565,6 +571,11 @@
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 10px;
+
+  /* reposition price */
+  position: relative;
+  padding-bottom: 3.5rem; /* Ensures enough space at bottom for price and button */
+  min-height: 10rem; /* Ensures minimum card height */
 }
 
 .activityImage {
@@ -573,7 +584,38 @@
   object-fit: cover; /* Ensures the image covers the area without distortion */
 }
 
+.priceButtonContainer {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 0.2rem;
+  gap: 0.2rem; /* Space between price and button */
+}
+
 .activityPrice {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #1e56a0;
+
+}
+
+.addButton {
+  background-color: #1e56a0;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap; /* Prevents button text from wrapping */
+  min-width: fit-content; /* Ensures button doesn't shrink too much */
+}
+/* .activityPrice {
   position: absolute;
   top: 1rem;
   right: 1rem;
@@ -595,7 +637,7 @@
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
+} */
 
 .addButton:hover {
   background-color: #154a8c;

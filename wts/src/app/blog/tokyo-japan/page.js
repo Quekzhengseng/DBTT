@@ -325,7 +325,8 @@ export default function TokyoBlogPage() {
                           handleAddToTrip({
                             id: "tokyo-tower",
                             title: "Tokyo Tower",
-                            price: "¥1,800",
+                            price: "SGD1,800",
+                            // price: "¥1,800",
                             image: "/tokyo-tower-detail.jpg",
                             time: "9:00 - 11:00",
                             duration: "2 hours",
@@ -386,7 +387,8 @@ export default function TokyoBlogPage() {
 
                     <div className={styles.activityPrice}>
                       <span className={styles.priceTag}>WTS ACTIVITY</span>
-                      <span className={styles.price}>¥1,800</span>
+                      <span className={styles.price}>SGD1,800</span>
+                      {/* <span className={styles.price}>¥1,800</span> */}
                     </div>
                   </div>
                 </div>
@@ -402,7 +404,8 @@ export default function TokyoBlogPage() {
                           handleAddToTrip({
                             id: "meiji-shrine",
                             title: "Meiji Shrine Tour",
-                            price: "¥3,500",
+                            price: "SGD3,500",
+                            // price: "¥3,500",
                             image: "/meiji-shrine-detail.jpg",
                             time: "9:00 - 12:00",
                             duration: "3 hours",
@@ -453,7 +456,8 @@ export default function TokyoBlogPage() {
 
                     <div className={styles.activityPrice}>
                       <span className={styles.priceTag}>WTS ACTIVITY</span>
-                      <span className={styles.price}>¥3,500</span>
+                      <span className={styles.price}>SGD3,500</span>
+                      {/* <span className={styles.price}>¥3,500</span> */}
                     </div>
 
                     <div className={styles.activityImage}>
@@ -508,7 +512,8 @@ export default function TokyoBlogPage() {
                           handleAddToTrip({
                             id: "teamlab-borderless",
                             title: "TeamLab Borderless",
-                            price: "¥3,200",
+                            price:"SGD3,200",
+                            // price: "¥3,200",
                             image: "/teamlab.jpg",
                             time: "10:00 - 14:00",
                             duration: "3-4 hours",
@@ -560,7 +565,8 @@ export default function TokyoBlogPage() {
 
                     <div className={styles.activityPrice}>
                       <span className={styles.priceTag}>WTS ACTIVITY</span>
-                      <span className={styles.price}>¥3,200</span>
+                      <span className={styles.price}>SGD3,200</span>
+                      {/* <span className={styles.price}>¥3,200</span> */}
                     </div>
 
                     <div className={styles.activityImage}>

@@ -97,7 +97,7 @@ function PaymentContent() {
         arrivalAirport: "SIN T1",
         duration: "7h 40m",
         airline: "Singapore Airlines",
-        price: 859,
+        price: 0,
         class: "Economy",
         status: "pending",
       },
@@ -447,9 +447,12 @@ function PaymentContent() {
                                 {flight.arrivalTime}
                               </div>
                             </div>
-                            <div className={styles.itemPrice}>
-                              ${flight.price}
-                            </div>
+                            {/* changed the abv dict to set return flight to 0 and added if for this */}
+                            {flight.price > 0 && (
+                              <div className={styles.itemPrice}>
+                                ${flight.price}
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>

@@ -169,7 +169,8 @@ const DraggableActivity = ({
                   onCheckout(activity, "activity");
                 }}
               >
-                Checkout ${activity.price}
+                Checkout
+                 {/* ${activity.price} */}
               </button>
             ) : (
               <div className={styles.confirmedStatus}>
@@ -207,7 +208,7 @@ const DraggableActivity = ({
       )}
 
       {/* "Add to Trip" button for recommendations */}
-      {origin === "recommendations" && (
+      {/* {origin === "recommendations" && (
         <button
           className={styles.addButton}
           onClick={() => onAddToDay(activity, 1)}
@@ -216,6 +217,24 @@ const DraggableActivity = ({
             ? `Add to Trip ($${activity.price})`
             : "Add to Trip"}
         </button>
+      )} */}
+
+
+      {origin === "recommendations" && (
+        <div className={styles.priceButtonContainer}>
+          {/* Price display, only if price > 0 */}
+          {activity.price > 0 && (
+            <div className={styles.activityPrice}>${activity.price}</div>
+          )}
+          <button
+            className={styles.addButton}
+            onClick={() => onAddToDay(activity, 1)}
+          >
+            {activity.price > 0
+              ? `Add to Trip`
+              : "Add to Trip"}
+          </button>
+        </div>
       )}
     </div>
   );
@@ -1239,7 +1258,10 @@ const TripItineraryPage = () => {
                   </div>
                 </div>
               </div>
+                <div className={styles.flightPrice}>
+                ${tripDetails.flights[0].price}
 
+                </div>
               {/* Flight checkout button - positioned at the bottom similar to hotel */}
               {tripDetails.flights[0].status === "pending" ||
               tripDetails.flights[1].status === "pending" ? (
@@ -1249,7 +1271,8 @@ const TripItineraryPage = () => {
                     handleOpenPayment(tripDetails.flights[0], "flight")
                   }
                 >
-                  Checkout ${tripDetails.flights[0].price}
+                  Checkout
+                   {/* ${tripDetails.flights[0].price} */}
                 </button>
               ) : (
                 <div className={styles.confirmedBooking}>
@@ -1342,13 +1365,17 @@ const TripItineraryPage = () => {
                   </div>
                 </div>
               </div>
+              <div className={styles.flightPrice}>
+              ${tripDetails.hotel.price}
 
+              </div>
               {tripDetails.hotel.status === "pending" ? (
                 <button
                   className={styles.checkoutBtn}
                   onClick={() => handleOpenPayment(tripDetails.hotel, "hotel")}
                 >
-                  Checkout ${tripDetails.hotel.price}
+                  Checkout
+                   {/* ${tripDetails.hotel.price} */}
                 </button>
               ) : (
                 <div className={styles.confirmedBooking}>
