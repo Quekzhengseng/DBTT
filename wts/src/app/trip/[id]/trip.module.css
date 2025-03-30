@@ -570,12 +570,12 @@
   height: 80px; /* Slightly taller */
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
 
   /* reposition price */
   position: relative;
-  padding-bottom: 3.5rem; /* Ensures enough space at bottom for price and button */
-  min-height: 10rem; /* Ensures minimum card height */
+  /* padding-bottom: 3.5rem; Ensures enough space at bottom for price and button */
+  /* min-height: 10rem; Ensures minimum card height */
 }
 
 .activityImage {
