@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FileText, Trash2, RefreshCw } from "lucide-react";
-import "./fileManager.css";
+import "./filemanager.css";
 
 export default function FileManager() {
   const [files, setFiles] = useState([]);

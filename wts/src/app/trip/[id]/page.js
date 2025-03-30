@@ -144,21 +144,37 @@ const DraggableActivity = ({
           renderStars(activity.rating)}
       </div>
 
-      {/* Right column - Image and checkout button */}
-      <div className={styles.activityRightSection}>
-        {activity.image && (
-          <div className={styles.activityImageContainer}>
-            <Image
-              src={activity.image}
-              alt={activity.title}
-              width={80}
-              height={60}
-              className={styles.activityImage}
-            />
-          </div>
-        )}
+    
+        {/* Right column - Image and checkout button */}
+        <div className={styles.activityRightSection}>
+          {/* Check if it's the hotel check-in activity and use hardcoded image */}
+          {activity.id === "existing-1" && activity.title === "Check-in at VIA INN PRIME AKASAKA" ? (
+            <div className={styles.activityImageContainer}>
+              <Image
+                src="/tokyo-hotel.jpg"
+                alt={activity.title}
+                width={80}
+                height={60}
+                className={styles.activityImage}
+              />
+            </div>
+          ) : (
+            // For all other activities, use the image property if available
+            activity.image && (
+              <div className={styles.activityImageContainer}>
+                <Image
+                  src={activity.image}
+                  alt={activity.title}
+                  width={80}
+                  height={60}
+                  className={styles.activityImage}
+                />
+              </div>
+            )
+          )}
 
-        {/* Show checkout button for itinerary paid activities */}
+
+
         {origin === "itinerary" && activity.price > 0 && (
           <div className={styles.activityCheckout}>
             {activity.status === "pending" ? (
@@ -472,6 +488,7 @@ const TripItineraryPage = () => {
     const savedTripDetails = localStorage.getItem(`trip_${tripId}`);
     if (savedTripDetails) {
       setTripDetails(JSON.parse(savedTripDetails));
+      console.log(savedTripDetails)
     }
 
     const savedActivities = localStorage.getItem(`activities_${tripId}`);
@@ -629,6 +646,8 @@ const TripItineraryPage = () => {
         description: "Check in and rest after flight",
         status: "confirmed",
         rating: 4.2,
+        image: "/tokyo-hotel.jpg"
+        
       },
     ],
     2: [],
