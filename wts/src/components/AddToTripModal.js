@@ -20,9 +20,10 @@ const AddToTripModal = ({ isOpen, onClose, activity }) => {
     },
     {
       id: 3,
-      title: "My Japan Trip",
-      dates: "20 Feb - 25 Feb 2025",
-      image: "/tokyo-trip.jpg",
+      title: "Tokyo 2025",
+      dates: "23 Feb - 28 Feb 2025",
+      // image: "/tokyo-trip.jpg",
+      image: "/tokyo-free3.jpg",
       destination: "Tokyo, Japan",
       activities: [],
     },

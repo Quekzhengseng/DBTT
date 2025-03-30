@@ -422,7 +422,7 @@ function PaymentContent() {
                     <div className={styles.totalSummary}>
                       <h2>Total Cost: ${totalCost.toFixed(2)}</h2>
                       <p>
-                        {unpaidItems.flights.length +
+                        {unpaidItems.flights.length -1 +
                           (unpaidItems.hotel ? 1 : 0) +
                           unpaidItems.activities.length}{" "}
                         items pending payment

@@ -535,7 +535,7 @@ const TripItineraryPage = () => {
         arrivalAirport: "SIN T1",
         duration: "7h 40m",
         airline: "Singapore Airlines",
-        price: 859,
+        price: 0,
         class: "Economy",
         status: "pending",
       },
@@ -1499,7 +1499,7 @@ const TripItineraryPage = () => {
                 <div className={styles.pendingSummary}>
                   <div className={styles.pendingInfo}>
                     <div className={styles.pendingCount}>
-                      {pendingItemsCount} items pending
+                      {pendingItemsCount -1} items pending
                     </div>
                     <div className={styles.pendingAmount}>
                       ${totalPendingAmount.toFixed(2)}
