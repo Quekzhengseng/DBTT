@@ -144,10 +144,15 @@ const DraggableActivity = ({
           renderStars(activity.rating)}
       </div>
 
-    
-        {/* Right column - Image and checkout button */}
+
+      {/* Right column - Image and checkout button */}
+
+
+
+
+
         <div className={styles.activityRightSection}>
-          {/* Check if it's the hotel check-in activity and use hardcoded image */}
+          {/* Image section - same for both itinerary and recommendations */}
           {activity.id === "existing-1" && activity.title === "Check-in at VIA INN PRIME AKASAKA" ? (
             <div className={styles.activityImageContainer}>
               <Image
@@ -159,7 +164,6 @@ const DraggableActivity = ({
               />
             </div>
           ) : (
-            // For all other activities, use the image property if available
             activity.image && (
               <div className={styles.activityImageContainer}>
                 <Image
@@ -173,46 +177,54 @@ const DraggableActivity = ({
             )
           )}
 
-
-
-        {origin === "itinerary" && activity.price > 0 && (
-          <div className={styles.activityCheckout}>
-            {activity.status === "pending" ? (
+          {/* Price/Action section - normalize between itinerary and recommendations */}
+          <div className={origin === "recommendations" ? styles.priceButtonContainer : styles.activityCheckout}>
+            {/* Price display */}
+            {activity.price > 0 ? (
+              <div className={`${styles.flightPrice} ${styles.minoradjustPrice}`}>${activity.price}</div>
+            ) : (
+              activity.id !== "existing-1" && (
+                <div className={styles.flightPrice}>FREE</div>
+              )
+            )}
+            
+            {/* Button or status */}
+            {origin === "recommendations" ? (
               <button
-                className={styles.checkoutButton}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onCheckout(activity, "activity");
-                }}
+                className={styles.addButton}
+                onClick={() => onAddToDay(activity, 1)}
               >
-                Checkout
-                 {/* ${activity.price} */}
+                Add to Trip
               </button>
             ) : (
-              <div className={styles.confirmedStatus}>
-                <svg
-                  className={styles.checkIcon}
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <circle cx="12" cy="12" r="10" fill="#4CAF50" />
-                  <path
-                    d="M8 12L11 15L16 9"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Confirmed
-              </div>
+              activity.status === "confirmed" && (
+                <div className={styles.confirmedStatus}>
+                  <svg
+                    className={styles.checkIcon}
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="12" r="10" fill="#4CAF50" />
+                    <path
+                      d="M8 12L11 15L16 9"
+                      stroke="white"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  Confirmed
+                </div>
+              )
             )}
           </div>
-        )}
-      </div>
+        </div>
+
+
+
 
       {origin === "itinerary" && (
         <button
@@ -236,22 +248,7 @@ const DraggableActivity = ({
       )} */}
 
 
-      {origin === "recommendations" && (
-        <div className={styles.priceButtonContainer}>
-          {/* Price display, only if price > 0 */}
-          {activity.price > 0 && (
-            <div className={styles.activityPrice}>${activity.price}</div>
-          )}
-          <button
-            className={styles.addButton}
-            onClick={() => onAddToDay(activity, 1)}
-          >
-            {activity.price > 0
-              ? `Add to Trip`
-              : "Add to Trip"}
-          </button>
-        </div>
-      )}
+
     </div>
   );
 };
@@ -644,10 +641,10 @@ const TripItineraryPage = () => {
         title: "Check-in at VIA INN PRIME AKASAKA",
         time: "15:00 - 16:00",
         description: "Check in and rest after flight",
-        status: "confirmed",
+        status: "pending",
         rating: 4.2,
         image: "/tokyo-hotel.jpg"
-        
+
       },
     ],
     2: [],
@@ -783,7 +780,7 @@ const TripItineraryPage = () => {
       title: "Tsukiji Fish Market",
       description: "Famous fish market with delicious food stalls",
       image: "/tsukiji.jpg",
-      price: 0,
+      price: 15,
       duration: "3-4 hours",
       time: "06:00 - 10:00",
       rating: 4.6,
@@ -823,7 +820,7 @@ const TripItineraryPage = () => {
       title: "Tokyo Imperial Palace",
       description: "Visit the primary residence of the Emperor of Japan",
       image: "/tokyo-palace.jpg",
-      price: 0,
+      price: 20,
       time: "09:00 - 11:30",
       rating: 4,
     },
@@ -832,7 +829,7 @@ const TripItineraryPage = () => {
       title: "Shopping at Shibuya",
       description: "Visit the famous crossing and enjoy shopping",
       image: "/shibuya.jpg",
-      price: 0,
+      price: 10,
       time: "14:00 - 17:00",
       rating: 4.7,
     },
@@ -1277,13 +1274,13 @@ const TripItineraryPage = () => {
                   </div>
                 </div>
               </div>
-                <div className={styles.flightPrice}>
+              <div className={styles.flightPrice}>
                 ${tripDetails.flights[0].price}
 
-                </div>
+              </div>
               {/* Flight checkout button - positioned at the bottom similar to hotel */}
               {tripDetails.flights[0].status === "pending" ||
-              tripDetails.flights[1].status === "pending" ? (
+                tripDetails.flights[1].status === "pending" ? (
                 <button
                   className={styles.checkoutBtn}
                   onClick={() =>
@@ -1291,7 +1288,7 @@ const TripItineraryPage = () => {
                   }
                 >
                   Checkout
-                   {/* ${tripDetails.flights[0].price} */}
+                  {/* ${tripDetails.flights[0].price} */}
                 </button>
               ) : (
                 <div className={styles.confirmedBooking}>
@@ -1385,7 +1382,7 @@ const TripItineraryPage = () => {
                 </div>
               </div>
               <div className={styles.flightPrice}>
-              ${tripDetails.hotel.price}
+                ${tripDetails.hotel.price}
 
               </div>
               {tripDetails.hotel.status === "pending" ? (
@@ -1394,7 +1391,7 @@ const TripItineraryPage = () => {
                   onClick={() => handleOpenPayment(tripDetails.hotel, "hotel")}
                 >
                   Checkout
-                   {/* ${tripDetails.hotel.price} */}
+                  {/* ${tripDetails.hotel.price} */}
                 </button>
               ) : (
                 <div className={styles.confirmedBooking}>
@@ -1499,7 +1496,7 @@ const TripItineraryPage = () => {
                 <div className={styles.pendingSummary}>
                   <div className={styles.pendingInfo}>
                     <div className={styles.pendingCount}>
-                      {pendingItemsCount -1} items pending
+                      {pendingItemsCount - 1} items pending
                     </div>
                     <div className={styles.pendingAmount}>
                       ${totalPendingAmount.toFixed(2)}
