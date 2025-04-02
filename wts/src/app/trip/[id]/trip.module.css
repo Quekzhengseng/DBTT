@@ -140,6 +140,8 @@
   color: white;
   border-radius: 10px;
   padding: 1rem;
+  max-height: 950px;
+  overflow-y: auto;
 }
 
 .addedActivitiesContainer {

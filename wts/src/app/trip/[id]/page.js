@@ -636,16 +636,16 @@ const TripItineraryPage = () => {
   // State for day activities
   const [dayActivities, setDayActivities] = useState({
     1: [
-      {
-        id: "existing-1",
-        title: "Check-in at VIA INN PRIME AKASAKA",
-        time: "15:00 - 16:00",
-        description: "Check in and rest after flight",
-        status: "pending",
-        rating: 4.2,
-        image: "/tokyo-hotel.jpg"
+      // {
+      //   id: "existing-1",
+      //   title: "Check-in at VIA INN PRIME AKASAKA",
+      //   time: "15:00 - 16:00",
+      //   description: "Check in and rest after flight",
+      //   status: "pending",
+      //   rating: 4.2,
+      //   image: "/tokyo-hotel.jpg"
 
-      },
+      // },
     ],
     2: [],
     3: [],
